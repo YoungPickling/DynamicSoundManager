@@ -2,16 +2,15 @@ package net.denanu.dynamicsoundmanager.gui;
 
 import java.io.File;
 
-import javax.annotation.Nullable;
-
 import fi.dy.masa.malilib.gui.GuiListBase;
-import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.gui.widgets.WidgetDirectoryEntry;
 import fi.dy.masa.malilib.gui.widgets.WidgetFileBrowserBase.DirectoryEntry;
 import net.denanu.dynamicsoundmanager.gui.widgets.WidgetAudioBrowser;
 
 public abstract class GuiBrowserBase extends GuiListBase<DirectoryEntry, WidgetDirectoryEntry, WidgetAudioBrowser>
 {
+	private WidgetAudioBrowser browser;
+
 	public GuiBrowserBase(final int browserX, final int browserY)
 	{
 		super(browserX, browserY);
@@ -20,8 +19,8 @@ public abstract class GuiBrowserBase extends GuiListBase<DirectoryEntry, WidgetD
 	@Override
 	protected WidgetAudioBrowser createListWidget(final int listX, final int listY)
 	{
-		// The width and height will be set to the actual values in initGui()
-		return new WidgetAudioBrowser(listX, listY, 100, 100, this, this.getSelectionListener());
+		this.browser = new WidgetAudioBrowser(listX, listY, 0, 0, this, this.getSelectionListener());
+		return this.browser;
 	}
 
 	/**
@@ -34,26 +33,23 @@ public abstract class GuiBrowserBase extends GuiListBase<DirectoryEntry, WidgetD
 	public abstract File getDefaultDirectory();
 
 	@Override
-	@Nullable
-	protected ISelectionListener<DirectoryEntry> getSelectionListener()
-	{
-		return null;
-	}
-
-	@Override
 	protected int getBrowserWidth()
 	{
-		return this.width - 20;
+		return this.width + 150;
 	}
 
 	@Override
 	protected int getBrowserHeight()
 	{
-		return this.height - 70;
+		return this.height - 90;
 	}
 
 	public int getMaxInfoHeight()
 	{
 		return this.getBrowserHeight();
+	}
+
+	protected WidgetAudioBrowser getBrowser() {
+		return this.browser;
 	}
 }

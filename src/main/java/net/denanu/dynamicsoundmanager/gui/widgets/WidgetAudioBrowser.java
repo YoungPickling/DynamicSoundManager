@@ -12,6 +12,7 @@ import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.gui.DataManager;
 import net.denanu.dynamicsoundmanager.gui.GuiBrowserBase;
 import net.denanu.dynamicsoundmanager.gui.Icons;
+import net.denanu.dynamicsoundmanager.utils.FileType;
 
 public class WidgetAudioBrowser extends WidgetFileBrowserBase {
 	protected final GuiBrowserBase parent;
@@ -21,7 +22,7 @@ public class WidgetAudioBrowser extends WidgetFileBrowserBase {
 	public WidgetAudioBrowser(final int x, final int y, final int width, final int height, final GuiBrowserBase parent, @Nullable final ISelectionListener<DirectoryEntry> selectionListener)
 	{
 		super(x, y, width, height, DataManager.getDirectoryCache(), parent.getBrowserContext(),
-				parent.getDefaultDirectory(), selectionListener, Icons.FILE_ICON_OGG);
+				parent.getDefaultDirectory(), selectionListener, Icons.FILE_ICON_DIR);
 
 		this.title = StringUtils.translate(DynamicSoundManager.MOD_ID + ".gui.title.browser");
 		this.infoWidth = 170;
@@ -36,19 +37,13 @@ public class WidgetAudioBrowser extends WidgetFileBrowserBase {
 	}
 
 	@Override
-	public void close()
-	{
-		super.close();
-	}
-
-	@Override
 	protected File getRootDirectory()
 	{
-		return DataManager.getSchematicsBaseDirectory();
+		return DataManager.getBaseDirectory();
 	}
 
 	@Override
 	protected FileFilter getFileFilter() {
-		return null;
+		return file -> (!file.isDirectory() && !file.getName().startsWith(".") && FileType.isValid(file));
 	}
 }

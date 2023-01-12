@@ -30,6 +30,8 @@ public class ServerSoundGroups implements IDirectoryCache {
 	public static void setup(final MinecraftServer server) {
 		ServerSoundGroups.path = server.getSavePath(WorldSavePath.ROOT).getParent().resolve("dynamic_sounds");
 
+		server.getOverworld().playSound(0, 0, 0, null, null, 0, 0, false);
+
 		final File partentFile = ServerSoundGroups.path.toFile();
 
 		FileModificationUtils.mkdirIfAbsent(partentFile);

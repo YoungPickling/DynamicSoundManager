@@ -21,4 +21,12 @@ public enum FileType
 
 		return UNKNOWN;
 	}
+
+	public static boolean isValid(final File file) {
+		final FileType type = FileType.fromFile(file);
+		return switch (type) {
+		case INVALID, UNKNOWN -> false;
+		default -> true;
+		};
+	}
 }

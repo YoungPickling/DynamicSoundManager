@@ -19,15 +19,15 @@ public enum Icons implements IGuiIcon, IFileBrowserIconProvider
 	BUTTON_PLUS_MINUS_16    (  0, 128, 16, 16),
 	ENCLOSING_BOX_ENABLED   (  0, 144, 16, 16),
 	ENCLOSING_BOX_DISABLED  (  0, 160, 16, 16),
-	FILE_ICON_OGG		     (144,   0, 12, 12),
+	FILE_ICON_OGG		    (144,   0, 12, 12),
 	FILE_ICON_SCHEMATIC     (144,  12, 12, 12),
 	FILE_ICON_SPONGE_SCH    (144,  24, 12, 12),
 	FILE_ICON_VANILLA       (144,  36, 12, 12),
 	FILE_ICON_JSON          (144,  44, 12, 12),
-	FILE_ICON_DIR           (156,   0, 12, 12),
-	FILE_ICON_DIR_UP        (156,  12, 12, 12),
+	FILE_ICON_DIR           (156,  12, 12, 12),
+	FILE_ICON_DIR_UP        (156,  36, 12, 12),
 	FILE_ICON_DIR_ROOT      (156,  24, 12, 12),
-	FILE_ICON_SEARCH        (156,  36, 12, 12),
+	FILE_ICON_SEARCH        (156,   0, 12, 12),
 	FILE_ICON_CREATE_DIR    (156,  48, 12, 12),
 	SCHEMATIC_TYPE_FILE     (144,   0, 12, 12),
 	SCHEMATIC_TYPE_MEMORY   (186,   0, 12, 12),
@@ -37,7 +37,9 @@ public enum Icons implements IGuiIcon, IFileBrowserIconProvider
 	CHECKBOX_UNSELECTED     (198,   0, 11, 11),
 	CHECKBOX_SELECTED       (198,  11, 11, 11),
 	ARROW_UP                (209,   0, 15, 15),
-	ARROW_DOWN              (209,  15, 15, 15);
+	ARROW_DOWN              (209,  15, 15, 15),
+	PLAY_BUTTON				(210,  31, 10, 10),
+	PAUSE_BUTTON			(209,  31, 15, 15);
 
 	public static final Identifier TEXTURE = new Identifier(DynamicSoundManager.MOD_ID, "textures/gui/gui_widgets.png");
 

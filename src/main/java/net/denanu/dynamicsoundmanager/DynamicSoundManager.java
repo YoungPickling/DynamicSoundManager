@@ -22,5 +22,6 @@ public class DynamicSoundManager implements ModInitializer {
 		ServerLifecycleEvents.SERVER_STARTED.register(ServerSoundGroups::setup);
 
 		NetworkHandler.registerC2SPackets();
+
 	}
 }
