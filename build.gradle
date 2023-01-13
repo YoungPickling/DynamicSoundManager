@@ -28,7 +28,7 @@ dependencies {
 	modImplementation "fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version}:${project.malilib_version}"
 	modCompileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
 	
-	implementation "com.puttysoftware.audio.ogg:audio-ogg:1.0.0"
+	include "com.puttysoftware.audio.ogg:audio-ogg:1.0.0"
 }
 
 group = project.group + "." + project.archives_base_name
