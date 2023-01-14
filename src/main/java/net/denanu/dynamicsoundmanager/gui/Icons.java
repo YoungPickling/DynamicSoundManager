@@ -38,8 +38,9 @@ public enum Icons implements IGuiIcon, IFileBrowserIconProvider
 	CHECKBOX_SELECTED       (198,  11, 11, 11),
 	ARROW_UP                (209,   0, 15, 15),
 	ARROW_DOWN              (209,  15, 15, 15),
-	PLAY_BUTTON				(210,  31, 10, 10),
-	PAUSE_BUTTON			(209,  31, 15, 15);
+	PLAY_BUTTON				(210,  30, 11, 11),
+	PAUSE_BUTTON			(210,  41, 11, 11),
+	TERMINATE_BUTTON		(210,  52, 11, 11);
 
 	public static final Identifier TEXTURE = new Identifier(DynamicSoundManager.MOD_ID, "textures/gui/gui_widgets.png");
 

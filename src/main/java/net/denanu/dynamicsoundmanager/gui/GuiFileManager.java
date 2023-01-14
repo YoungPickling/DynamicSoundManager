@@ -102,4 +102,10 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 			}
 		};
 	}
+
+	@Override
+	public void closeGui(final boolean showParent) {
+		super.closeGui(showParent);
+		this.audioPlayer.remove();
+	}
 }
