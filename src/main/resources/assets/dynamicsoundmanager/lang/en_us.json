@@ -1,3 +1,10 @@
 {
-	"dynamicsoundmanager.gui.title.configs": "Custom Audio Manager"
+	"dynamicsoundmanager.gui.title.configs": "Custom Audio Manager",
+	
+	"dynamicsoundmanager.button.home": "Home",
+	"dynamicsoundmanager.button.return": "Return",
+	"dynamicsoundmanager.button.import": "Import",
+	"dynamicsoundmanager.button.import_file": "Import",
+	
+	"dynamicsoundmanager.test": "Test"
 }

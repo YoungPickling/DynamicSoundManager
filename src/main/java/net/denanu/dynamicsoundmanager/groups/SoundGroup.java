@@ -1,5 +1,7 @@
 package net.denanu.dynamicsoundmanager.groups;
 
+import java.nio.file.Path;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -20,5 +22,9 @@ public class SoundGroup {
 
 	public Identifier getId() {
 		return this.id;
+	}
+
+	public Path getPath() {
+		return ServerSoundGroups.path.resolve(this.id.toString());
 	}
 }

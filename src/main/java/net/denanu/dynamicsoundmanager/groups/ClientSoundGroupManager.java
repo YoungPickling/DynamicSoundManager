@@ -2,14 +2,20 @@ package net.denanu.dynamicsoundmanager.groups;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 import fi.dy.masa.malilib.util.FileUtils;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 
 public class ClientSoundGroupManager {
+	public static ArrayList<Identifier> soundIds = new ArrayList<>();
+
+	public static FileSynchronizationMetadataBuilder metadata;
+
 	public static String getServerName(final MinecraftClient client) {
 		final ServerInfo data = client.getCurrentServerEntry();
 		if (client.isInSingleplayer()) {
@@ -38,5 +44,10 @@ public class ClientSoundGroupManager {
 		FileModificationUtils.mkdirIfAbsent(cacheFile);
 
 		return cachePath;
+	}
+
+	public static void setup() {
+		final File path = ClientSoundGroupManager.getChach(MinecraftClient.getInstance()).resolve("metadata.json").toFile();
+		ClientSoundGroupManager.metadata = new FileSynchronizationMetadataBuilder(path);
 	}
 }

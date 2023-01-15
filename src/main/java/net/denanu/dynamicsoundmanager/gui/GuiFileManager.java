@@ -11,7 +11,10 @@ import fi.dy.masa.malilib.gui.widgets.WidgetFileBrowserBase.DirectoryEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioPlayerWidget;
+import net.denanu.dynamicsoundmanager.networking.c2s.UploadFileC2SPacket;
 import net.denanu.dynamicsoundmanager.utils.FileType;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 
 public class GuiFileManager extends GuiBrowserBase implements ISelectionListener<DirectoryEntry>
 {
@@ -54,14 +57,55 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 		int x = 20;
 		final int y = 20;
 
-		x += this.createFileSystemButton(x, y, FileSystemView.getFileSystemView().getHomeDirectory(), "home");
+		x += this.createFileSystemButton(x, y, FileSystemView.getFileSystemView().getHomeDirectory(), StringUtils.translate(DynamicSoundManager.MOD_ID + ".button.home"));
 
 		for (final File system : FileSystemView.getFileSystemView().getRoots()) {
 			x += this.createFileSystemButton(x, y, system, system.toString()) + 2;
 		}
 
 		this.addWidget(this.audioPlayer = new AudioPlayerWidget(10, this.height - 20, this.getBrowserWidth(), 20));
+		this.addMenuBar();
+	}
 
+	private void addMenuBar() {
+		int x = this.width - 2;
+		final int y = this.height - 22;
+
+		x = this.addReturnButton(x, y);
+		x = this.addImportButton(x, y);
+	}
+
+	private int addReturnButton(final int x, final int y) {
+		final ButtonGeneric button = new ButtonGeneric(x, y, -1, 20, StringUtils.translate(DynamicSoundManager.MOD_ID + ".button.return"));
+		button.setPosition(x - button.getWidth(), y);
+		this.addButton(button, (b, m) -> {
+			this.closeGui(true);
+		});
+		return x - button.getWidth() - 2;
+	}
+
+	private int addImportButton(final int x, final int y) {
+		final ButtonGeneric button = new ButtonGeneric(x, y, -1, 20, StringUtils.translate(DynamicSoundManager.MOD_ID + ".button.import_file"));
+		button.setPosition(x - button.getWidth(), y);
+
+		final MinecraftClient client = MinecraftClient.getInstance();
+		final AudioPlayerWidget.AudioFileChangedCallback enableCallback = (final File file) -> {
+			button.setEnabled(client.world != null && this.audioPlayer.hasAudioFile() && GuiConfigs.getId() != null);
+		};
+		enableCallback.update(null);
+		this.audioPlayer.addAudioFileChangedCallbacks(enableCallback);
+
+		this.addButton(button, (b, m) -> {
+			this.uploadFile();
+		});
+		return x - button.getWidth() - 2;
+	}
+
+	private void uploadFile() {
+		final File audio = this.audioPlayer.getAudioFile();
+		final Identifier group = GuiConfigs.getId();
+
+		UploadFileC2SPacket.send(audio, group);
 	}
 
 	private int createFileSystemButton(final int x, final int y, final File file, final String name) {
@@ -89,6 +133,7 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 	public void onSelectionChange(@Nullable final DirectoryEntry entry)
 	{
 		this.clearButtons();
+		this.audioPlayer.clearAudioFileChangedCallbacks();
 		this.createButtons();
 	}
 

@@ -1,27 +1,28 @@
 package net.denanu.dynamicsoundmanager.gui.widgets;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.puttysoftware.audio.ogg.OggFile;
 
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
-import fi.dy.masa.malilib.gui.interfaces.ISliderCallback;
 import fi.dy.masa.malilib.gui.widgets.WidgetContainer;
-import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.gui.Icons;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class AudioPlayerWidget extends WidgetContainer implements ISliderCallback {
+public class AudioPlayerWidget extends WidgetContainer {
 	private File audioFile = null;
 	private Optional<OggFile> player;
 	private ButtonGeneric playButton;
 	private PlayStates state;
 	private ButtonGeneric stopButton;
 	private boolean shouldUpdate = false;
+
+	private final List<AudioFileChangedCallback> audioFileChangedCallbacks = new ArrayList<>();
 
 	enum PlayStates {
 		PLAYING,
@@ -48,7 +49,7 @@ public class AudioPlayerWidget extends WidgetContainer implements ISliderCallbac
 	@SuppressWarnings("removal")
 	private void addPlayButton(final int x) {
 		this.playButton = new ButtonGeneric(x, this.y, Icons.PLAY_BUTTON);
-		this.playButton.setEnabled(this.audioFile != null);
+		this.playButton.setEnabled(this.hasAudioFile());
 		this.addButton(this.playButton, (b, mouse) -> {
 			if (this.player.isPresent()) {
 				this.player.get().resume();
@@ -63,6 +64,10 @@ public class AudioPlayerWidget extends WidgetContainer implements ISliderCallbac
 		});
 
 
+	}
+
+	public boolean hasAudioFile() {
+		return this.audioFile != null;
 	}
 
 	@SuppressWarnings("removal")
@@ -107,6 +112,7 @@ public class AudioPlayerWidget extends WidgetContainer implements ISliderCallbac
 
 	public void load(final File file) {
 		this.audioFile = file;
+		this.updateCallbacks();
 	}
 
 	public void enable() {
@@ -130,44 +136,29 @@ public class AudioPlayerWidget extends WidgetContainer implements ISliderCallbac
 			this.initGui();
 			this.shouldUpdate = false;
 		}
-		if (this.player.isPresent()) {
-			try {
-				DynamicSoundManager.LOGGER.info(Float.toString(this.player.get().secondsRemaining()));
-			} catch (final IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
 		super.render(mouseX, mouseY, selected, matrixStack);
 	}
 
-	@Override
-	public int getMaxSteps() {
-		if (this.player.isPresent()) {
-			return (int)this.player.get().getAudioLength();
+
+	public void addAudioFileChangedCallbacks(final AudioFileChangedCallback calback) {
+		this.audioFileChangedCallbacks.add(calback);
+	}
+
+	public void clearAudioFileChangedCallbacks() {
+		this.audioFileChangedCallbacks.clear();
+	}
+
+	private void updateCallbacks() {
+		for (final AudioFileChangedCallback calback : this.audioFileChangedCallbacks) {
+			calback.update(this.audioFile);
 		}
-		return 10;
 	}
 
-	@Override
-	public double getValueRelative() {
-		if (this.player.isPresent()) {
-			try {
-				return 1-this.player.get().secondsRemaining() / this.player.get().getAudioLength();
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return 0;
+	public interface AudioFileChangedCallback {
+		void update(File audiofile);
 	}
 
-	@Override
-	public void setValueRelative(final double relativeValue) {
-	}
-
-	@Override
-	public String getFormattedDisplayValue() {
-		return null;
+	public File getAudioFile() {
+		return this.audioFile;
 	}
 }

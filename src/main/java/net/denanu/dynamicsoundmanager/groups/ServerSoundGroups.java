@@ -3,6 +3,7 @@ package net.denanu.dynamicsoundmanager.groups;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
@@ -17,6 +18,7 @@ public class ServerSoundGroups implements IDirectoryCache {
 	public static HashMap<Identifier, SoundGroup> sounds = new HashMap<>();
 
 	public static Path path;
+	public static FileSynchronizationMetadataBuilder metadata;
 
 	public static SoundGroup register(final Identifier id, final SoundGroup group) {
 		ServerSoundGroups.sounds.put(id, group);
@@ -29,19 +31,17 @@ public class ServerSoundGroups implements IDirectoryCache {
 
 	public static void setup(final MinecraftServer server) {
 		ServerSoundGroups.path = server.getSavePath(WorldSavePath.ROOT).getParent().resolve("dynamic_sounds");
-
-		server.getOverworld().playSound(0, 0, 0, null, null, 0, 0, false);
-
 		final File partentFile = ServerSoundGroups.path.toFile();
-
 		FileModificationUtils.mkdirIfAbsent(partentFile);
 
-		for (final Identifier group : ServerSoundGroups.sounds.keySet()) {
-			final File groupFile = ServerSoundGroups.path.resolve(group.toString()).toFile();
+		for (final Entry<Identifier, SoundGroup> group : ServerSoundGroups.sounds.entrySet()) {
+			final File groupFile = group.getValue().getPath().toFile();
 			if ((!groupFile.exists() || !groupFile.isDirectory()) && !groupFile.mkdir()) {
 				throw new RuntimeException("unable to create dynamic sounds folder for the group " + group.toString());
 			}
 		}
+
+		ServerSoundGroups.metadata = new FileSynchronizationMetadataBuilder(ServerSoundGroups.path.resolve("metadata.json").toFile());
 	}
 
 	public static Path getPath() {
