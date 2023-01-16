@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import net.denanu.dynamicsoundmanager.groups.ServerSoundGroups;
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
+import net.denanu.dynamicsoundmanager.player_api.DebugSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.util.Identifier;
@@ -20,8 +21,7 @@ public class DynamicSoundManager implements ModInitializer {
 		ServerSoundGroups.register(Identifier.of(DynamicSoundManager.MOD_ID, "test"));
 
 		ServerLifecycleEvents.SERVER_STARTED.register(ServerSoundGroups::setup);
-
+		DebugSounds.setup();
 		NetworkHandler.registerC2SPackets();
-
 	}
 }

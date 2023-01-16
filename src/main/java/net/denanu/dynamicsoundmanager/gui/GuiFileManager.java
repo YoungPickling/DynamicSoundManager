@@ -11,7 +11,7 @@ import fi.dy.masa.malilib.gui.widgets.WidgetFileBrowserBase.DirectoryEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioPlayerWidget;
-import net.denanu.dynamicsoundmanager.networking.c2s.UploadFileC2SPacket;
+import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidirectionalPacket;
 import net.denanu.dynamicsoundmanager.utils.FileType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
@@ -105,7 +105,7 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 		final File audio = this.audioPlayer.getAudioFile();
 		final Identifier group = GuiConfigs.getId();
 
-		UploadFileC2SPacket.send(audio, group);
+		InitTransferBidirectionalPacket.send(audio, group);
 	}
 
 	private int createFileSystemButton(final int x, final int y, final File file, final String name) {

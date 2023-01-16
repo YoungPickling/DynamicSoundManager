@@ -4,24 +4,23 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
-import org.spongepowered.include.com.google.gson.Gson;
-import org.spongepowered.include.com.google.gson.internal.LinkedTreeMap;
-
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 
 public class FileSynchronizationMetadataBuilder {
-	private Map<String, Double> versions;
+	private final Map<String, Long> versions;
 	private final File file;
 
 	public FileSynchronizationMetadataBuilder(final File file) {
@@ -31,13 +30,18 @@ public class FileSynchronizationMetadataBuilder {
 	}
 
 	public void reload() {
-		@SuppressWarnings("unchecked")
-		final LinkedTreeMap<String, Double> jo = (LinkedTreeMap<String, Double>) this.read();
+		final JSONObject jo = this.read();
 		if (jo == null) {
 			this.mkfile();
 		}
 		else {
-			this.versions = jo;
+			this.versions.clear();
+			for (final Object key : jo.keySet()) {
+				final String key_str = (String)key;
+				final long version = (long)jo.get(key);
+
+				this.versions.put(key_str, version);
+			}
 		}
 	}
 
@@ -46,55 +50,72 @@ public class FileSynchronizationMetadataBuilder {
 		this.update();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void update() {
-		this.write();
+		final JSONObject jo = new JSONObject();
+		jo.putAll(this.versions);
+		this.write(jo);
 	}
 
-	private void write() {
-		final Gson gson = new Gson();
-		try {
-			//this.file.delete();
-			final FileWriter out = new FileWriter(this.file);
-			gson.toJson(this.versions, out);
+	private void write(final JSONObject jo) {
+		try (PrintWriter out = new PrintWriter(new FileWriter(this.file))) {
+			out.write(jo.toJSONString());
 			out.close();
-		} catch (JsonIOException | IOException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public LinkedTreeMap<?, ?> read() {
-		final Gson gson = new Gson();
-		try {
-			return gson.fromJson(new FileReader(this.file), LinkedTreeMap.class);
-		} catch (JsonSyntaxException | JsonIOException | IOException e) {
+	public JSONObject read() {
+		final JSONParser jsonParser = new JSONParser();
+
+		try (FileReader reader = new FileReader(this.file))
+		{
+			//Read JSON file
+			final Object obj = jsonParser.parse(reader);
+
+			return (JSONObject) obj;
+
+		} catch (IOException | org.json.simple.parser.ParseException e) {
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 
-	public void changeVersion(final Identifier id, final File file) {
-		final String key = new StringBuilder()
-				.append(id.toString())
-				.append(":")
-				.append(file.getName())
-				.toString();
+	public void changeVersion(final Identifier id, final String file) {
+		this.changeVersion(id, file, Instant.now().toEpochMilli());
+	}
 
-		final long version = Instant.now().toEpochMilli();
-
-		this.versions.put(key, (double)version);
+	public void changeVersion(final Identifier id, final String file, final long version) {
+		final String key = FileSynchronizationMetadataBuilder.buildKey(id, file);
+		this.versions.put(key, version);
 		this.update();
 	}
 
-	public Map<String, Double> getVersions() {
+	public long get(final Identifier id, final String file) {
+		return this.versions.get(FileSynchronizationMetadataBuilder.buildKey(id, file));
+	}
+
+	private static String buildKey(final Identifier id, final String file) {
+		return new StringBuilder()
+				.append(id.toString())
+				.append(":")
+				.append(file)
+				.toString();
+	}
+
+	public Map<String, Long> getVersions() {
 		return this.versions;
 	}
 
-	public Map<String, Double> getNonMatchingVersions(final ArrayList<Pair<String, Double>> shouldBe) {
-		final Map<String, Double> nonMatching = new TreeMap<>();
-		for (final Pair<String, Double> entry : shouldBe) {
-			if (!this.versions.containsKey(entry.getLeft()) || entry.getRight() != this.versions.get(entry.getLeft())) {
-				nonMatching.put(entry.getLeft(), entry.getRight());
+	public List<String> getNonMatchingVersions(final ArrayList<Pair<String, Long>> shouldBe) {
+		final List<String> nonMatching = new LinkedList<>();
+		for (final Pair<String, Long> entry : shouldBe) {
+			final long version = this.versions.get(entry.getLeft());
+			if (!this.versions.containsKey(entry.getLeft()) || entry.getRight() != version) {
+				nonMatching.add(entry.getLeft());
 			}
 		}
 		return nonMatching;
