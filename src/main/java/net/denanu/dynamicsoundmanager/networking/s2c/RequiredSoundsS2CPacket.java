@@ -3,8 +3,9 @@ package net.denanu.dynamicsoundmanager.networking.s2c;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.denanu.dynamicsoundmanager.groups.ClientSoundGroupManager;
+import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.groups.ServerSoundGroups;
+import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
 import net.denanu.dynamicsoundmanager.networking.c2s.RequestDownloadFilesC2SPacket;
@@ -32,11 +33,14 @@ public class RequiredSoundsS2CPacket {
 		});
 
 		ClientSoundGroupManager.soundIds = buf.readCollection(ArrayList::new, PacketByteBuf::readIdentifier);
+		ClientSoundGroupManager.populateSounds(data, ClientSoundGroupManager.addClientSoundData());
+
+
 		final List<String> nonMatching = ClientSoundGroupManager.metadata.getNonMatchingVersions(data);
 		RequestDownloadFilesC2SPacket.send(nonMatching);
 
 		final WeightedSoundSet sound = ((SoundManagerMixin)client.getSoundManager()).getSounds().get(DebugSounds.TEST_ID);
-		//client.world.playSound(BlockPos.ORIGIN, DebugSounds.TEST, SoundCategory.MASTER, 0, 0, false);
+		DynamicSoundManager.LOGGER.info(sound.toString());
 	}
 
 	public static PacketByteBuf toBuf() {

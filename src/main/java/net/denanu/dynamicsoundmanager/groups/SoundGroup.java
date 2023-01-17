@@ -23,8 +23,7 @@ public class SoundGroup {
 	public Identifier getId() {
 		return this.id;
 	}
-
 	public Path getPath() {
-		return ServerSoundGroups.path.resolve(this.id.toString());
+		return ServerSoundGroups.path.resolve(this.getId().getNamespace()).resolve(this.getId().getPath());
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
 import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidirectionalPacket;
+import net.denanu.dynamicsoundmanager.utils.FileKey;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -14,7 +15,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 
 public class RequestDownloadFilesC2SPacket {
 	public static void receive(final MinecraftServer server, final ServerPlayerEntity player, final ServerPlayNetworkHandler handler,
@@ -23,12 +23,9 @@ public class RequestDownloadFilesC2SPacket {
 		final Collection<String> files = buf.readCollection(ArrayList::new, PacketByteBuf::readString);
 
 		for (final String file : files) {
-			final String[] keys = file.split(":");
+			final FileKey key = new FileKey(file);
 
-			final Identifier group = Identifier.of(keys[0], keys[1]);
-			final String name = keys[2];
-
-			InitTransferBidirectionalPacket.send(player, group, name);
+			InitTransferBidirectionalPacket.send(player, key.getId(), key.getFileName());
 		}
 
 	}

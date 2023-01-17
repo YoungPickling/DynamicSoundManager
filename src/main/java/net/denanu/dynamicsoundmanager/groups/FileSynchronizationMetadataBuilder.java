@@ -30,7 +30,15 @@ public class FileSynchronizationMetadataBuilder {
 	}
 
 	public void reload() {
-		final JSONObject jo = this.read();
+		JSONObject jo = null;
+
+		try {
+			jo = this.read();
+		}
+		catch (final Exception e) {
+			e.printStackTrace();
+		}
+
 		if (jo == null) {
 			this.mkfile();
 		}
@@ -78,7 +86,7 @@ public class FileSynchronizationMetadataBuilder {
 			return (JSONObject) obj;
 
 		} catch (IOException | org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		return null;
@@ -113,8 +121,9 @@ public class FileSynchronizationMetadataBuilder {
 	public List<String> getNonMatchingVersions(final ArrayList<Pair<String, Long>> shouldBe) {
 		final List<String> nonMatching = new LinkedList<>();
 		for (final Pair<String, Long> entry : shouldBe) {
-			final long version = this.versions.get(entry.getLeft());
-			if (!this.versions.containsKey(entry.getLeft()) || entry.getRight() != version) {
+			if (!this.versions.containsKey(entry.getLeft()) || entry.getRight() != (long)this.versions.get(entry.getLeft())) {
+				entry.getRight();
+				this.versions.get(entry.getLeft());
 				nonMatching.add(entry.getLeft());
 			}
 		}

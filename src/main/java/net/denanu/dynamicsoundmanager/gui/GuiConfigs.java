@@ -11,7 +11,7 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
-import net.denanu.dynamicsoundmanager.groups.ClientSoundGroupManager;
+import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 

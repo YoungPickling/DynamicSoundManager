@@ -1,6 +1,7 @@
 package net.denanu.dynamicsoundmanager.player_api;
 
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
+import net.denanu.dynamicsoundmanager.groups.ServerSoundGroups;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -12,6 +13,7 @@ public class DebugSounds {
 
 	private static SoundEvent register(final Identifier id) {
 		final SoundEvent event = new SoundEvent(id);
+		ServerSoundGroups.register(id);
 		return Registry.register(Registry.SOUND_EVENT, id, event);
 	}
 

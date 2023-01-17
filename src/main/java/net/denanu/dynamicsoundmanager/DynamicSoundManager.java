@@ -8,7 +8,9 @@ import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
 import net.denanu.dynamicsoundmanager.player_api.DebugSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class DynamicSoundManager implements ModInitializer {
 
@@ -18,10 +20,13 @@ public class DynamicSoundManager implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ServerSoundGroups.register(Identifier.of(DynamicSoundManager.MOD_ID, "test"));
-
 		ServerLifecycleEvents.SERVER_STARTED.register(ServerSoundGroups::setup);
 		DebugSounds.setup();
 		NetworkHandler.registerC2SPackets();
+
+		Identifier.of("::", DynamicSoundManager.MOD_ID);
+
+		final SoundEvent TestEvent = Registry.SOUND_EVENT.get(DebugSounds.TEST_ID);
+		DynamicSoundManager.LOGGER.info(TestEvent.toString());
 	}
 }

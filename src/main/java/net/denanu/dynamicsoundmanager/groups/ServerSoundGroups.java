@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import javax.annotation.Nullable;
 
 import fi.dy.masa.malilib.gui.interfaces.IDirectoryCache;
+import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
@@ -36,7 +37,7 @@ public class ServerSoundGroups implements IDirectoryCache {
 
 		for (final Entry<Identifier, SoundGroup> group : ServerSoundGroups.sounds.entrySet()) {
 			final File groupFile = group.getValue().getPath().toFile();
-			if ((!groupFile.exists() || !groupFile.isDirectory()) && !groupFile.mkdir()) {
+			if ((!groupFile.exists() || !groupFile.isDirectory()) && !groupFile.mkdirs()) {
 				throw new RuntimeException("unable to create dynamic sounds folder for the group " + group.toString());
 			}
 		}
