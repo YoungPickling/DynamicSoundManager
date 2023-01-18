@@ -4,9 +4,11 @@ import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.WeightedSoundSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.floatprovider.ConstantFloatProvider;
+import net.minecraft.util.math.random.Random;
 
 @Environment(value=EnvType.CLIENT)
 public class DynamicWeightedSoundSet extends WeightedSoundSet {
@@ -28,5 +30,10 @@ public class DynamicWeightedSoundSet extends WeightedSoundSet {
 				config.getAttenuation(),
 				config.getKey()
 				));
+	}
+
+	@Override
+	public Sound getSound(final Random random) {
+		return super.getSound(random);
 	}
 }

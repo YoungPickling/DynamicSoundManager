@@ -9,9 +9,15 @@ import javax.annotation.Nullable;
 
 import fi.dy.masa.malilib.gui.interfaces.IDirectoryCache;
 import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
+import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 
@@ -61,5 +67,21 @@ public class ServerSoundGroups implements IDirectoryCache {
 
 	@Override
 	public void setCurrentDirectoryForContext(final String context, final File dir) {
+	}
+
+	public static DynamicSoundConfigs playSound(final ServerWorld world, @Nullable final PlayerEntity player, final double x, final double y, final double z, final SoundEvent sound, final SoundCategory category, final float volume, final float pitch) {
+		final long seed = world.getRandom().nextLong();
+		world.playSound(player, x, y, z, sound, category, volume, pitch, seed);
+		return ServerSoundGroups.getConfig(seed, sound.getId());
+	}
+
+	public static DynamicSoundConfigs playSoundFromEntity(final ServerWorld world, @Nullable final PlayerEntity player, final Entity entity, final SoundEvent sound, final SoundCategory category, final float volume, final float pitch) {
+		final long seed = world.getRandom().nextLong();
+		world.playSoundFromEntity(player, entity, sound, category, volume, pitch, seed);
+		return ServerSoundGroups.getConfig(seed, sound.getId());
+	}
+
+	private static DynamicSoundConfigs getConfig(final long seed, final Identifier id) {
+		return ServerSoundGroups.sounds.get(id).getConfig(seed);
 	}
 }

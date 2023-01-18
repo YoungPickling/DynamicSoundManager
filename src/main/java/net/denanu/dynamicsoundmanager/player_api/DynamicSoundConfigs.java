@@ -11,7 +11,7 @@ public class DynamicSoundConfigs {
 	float volume = 1f, pitch = 1f;
 	Sound.RegistrationType registrationType = Sound.RegistrationType.FILE;
 	boolean stream = false, preload = false;
-	int attenuation = 16;
+	int attenuation = 16, weight = 1;
 
 	public DynamicSoundConfigs(final Identifier id, final String key) {
 		this.id = id;
@@ -103,5 +103,9 @@ public class DynamicSoundConfigs {
 
 	public String getKey() {
 		return this.key;
+	}
+
+	public int getWeight() {
+		return this.weight;
 	}
 }
