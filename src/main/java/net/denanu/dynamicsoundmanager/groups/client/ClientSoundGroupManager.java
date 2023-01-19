@@ -2,17 +2,18 @@ package net.denanu.dynamicsoundmanager.groups.client;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import fi.dy.masa.malilib.util.FileUtils;
 import net.denanu.dynamicsoundmanager.groups.FileSynchronizationMetadataBuilder;
+import net.denanu.dynamicsoundmanager.groups.SoundGroup;
 import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
-import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.denanu.dynamicsoundmanager.player_api.DynamicWeightedSoundSet;
-import net.denanu.dynamicsoundmanager.utils.FileKey;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,12 +21,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.sound.WeightedSoundSet;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.WorldSavePath;
 
 @Environment(value=EnvType.CLIENT)
 public class ClientSoundGroupManager {
-	public static ArrayList<Identifier> soundIds = new ArrayList<>();
+	public static HashSet<Identifier> soundIds = new HashSet<>();
 
 	public static FileSynchronizationMetadataBuilder metadata;
 
@@ -46,6 +46,12 @@ public class ClientSoundGroupManager {
 				.append("/")
 				.append(data.address)
 				.toString();
+	}
+
+	public static void init(final List<SoundGroup> configs) {
+		ClientSoundGroupManager.soundIds.clear();
+		final Stream<Identifier> out = configs.stream().map(SoundGroup::getId);
+		ClientSoundGroupManager.soundIds.addAll(out.toList());
 	}
 
 	public static Path getChach(final MinecraftClient client) {
@@ -80,7 +86,7 @@ public class ClientSoundGroupManager {
 		return ClientSoundGroupManager.addPlaySets(ClientSoundGroupManager.soundIds);
 	}
 
-	public static Map<Identifier, DynamicWeightedSoundSet> addPlaySets(final List<Identifier> ids) {
+	public static Map<Identifier, DynamicWeightedSoundSet> addPlaySets(final Collection<Identifier> ids) {
 		final Map<Identifier, WeightedSoundSet> sounds = ClientSoundGroupManager.getSounds();
 		final Map<Identifier, DynamicWeightedSoundSet> dynamicSounds = new HashMap<>();
 
@@ -93,10 +99,9 @@ public class ClientSoundGroupManager {
 		return dynamicSounds;
 	}
 
-	public static void populateSounds(final ArrayList<Pair<String, Long>> data, final Map<Identifier, DynamicWeightedSoundSet> groups) {
-		for (final Pair<String, Long> sound_data : data) {
-			final FileKey key = new FileKey(sound_data.getLeft());
-			groups.get(key.getId()).addSound(DynamicSoundConfigs.of(key));
+	public static void populateSounds(final List<SoundGroup> configs, final Map<Identifier, DynamicWeightedSoundSet> groups) {
+		for (final SoundGroup sound_data : configs) {
+			groups.get(sound_data.getId()).addSounds(sound_data.sounds);
 		}
 
 	}

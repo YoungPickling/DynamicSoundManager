@@ -1,6 +1,7 @@
 package net.denanu.dynamicsoundmanager.groups;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -20,12 +21,20 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
+import net.minecraft.util.math.Vec3d;
 
 public class ServerSoundGroups implements IDirectoryCache {
 	public static HashMap<Identifier, SoundGroup> sounds = new HashMap<>();
 
 	public static Path path;
 	public static FileSynchronizationMetadataBuilder metadata;
+
+	public static FileFilter AUDIO_FILE_FILTER = dir -> {
+		if (dir.isFile() && dir.getName().endsWith(".ogg")) {
+			return true;
+		}
+		return false;
+	};
 
 	public static SoundGroup register(final Identifier id, final SoundGroup group) {
 		ServerSoundGroups.sounds.put(id, group);
@@ -41,14 +50,27 @@ public class ServerSoundGroups implements IDirectoryCache {
 		final File partentFile = ServerSoundGroups.path.toFile();
 		FileModificationUtils.mkdirIfAbsent(partentFile);
 
+
 		for (final Entry<Identifier, SoundGroup> group : ServerSoundGroups.sounds.entrySet()) {
 			final File groupFile = group.getValue().getPath().toFile();
 			if ((!groupFile.exists() || !groupFile.isDirectory()) && !groupFile.mkdirs()) {
 				throw new RuntimeException("unable to create dynamic sounds folder for the group " + group.toString());
 			}
+
+			group.getValue().clear();
+
+			for (final File audio : groupFile.listFiles(ServerSoundGroups.AUDIO_FILE_FILTER)) {
+				group.getValue().addConfig(
+						new DynamicSoundConfigs(group.getKey(), audio.getName())
+						);
+			}
 		}
 
 		ServerSoundGroups.metadata = new FileSynchronizationMetadataBuilder(ServerSoundGroups.path.resolve("metadata.json").toFile());
+	}
+
+	public static void addConfig(final Identifier id, final String key) {
+		ServerSoundGroups.sounds.get(id).addConfig(new DynamicSoundConfigs(id, key));
 	}
 
 	public static Path getPath() {
@@ -67,6 +89,10 @@ public class ServerSoundGroups implements IDirectoryCache {
 
 	@Override
 	public void setCurrentDirectoryForContext(final String context, final File dir) {
+	}
+
+	public static DynamicSoundConfigs playSound(final ServerWorld world, @Nullable final PlayerEntity player, final Vec3d pos, final SoundEvent sound, final SoundCategory category, final float volume, final float pitch) {
+		return ServerSoundGroups.playSound(world, player, pos.x, pos.y, pos.z, sound, category, volume, pitch);
 	}
 
 	public static DynamicSoundConfigs playSound(final ServerWorld world, @Nullable final PlayerEntity player, final double x, final double y, final double z, final SoundEvent sound, final SoundCategory category, final float volume, final float pitch) {

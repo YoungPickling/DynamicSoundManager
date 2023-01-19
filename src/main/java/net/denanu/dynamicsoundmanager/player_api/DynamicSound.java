@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
+import javax.sound.sampled.AudioFormat;
+
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.minecraft.client.MinecraftClient;
@@ -53,6 +55,12 @@ public class DynamicSound extends Sound {
 				StaticSound staticSound;
 				try (OggAudioStream oggAudioStream = new OggAudioStream(inputStream);){
 					final ByteBuffer byteBuffer = oggAudioStream.getBuffer();
+
+					final AudioFormat format = oggAudioStream.getFormat();
+					final float frames = format.getFrameSize() * format.getFrameRate();
+					final float plyTime = byteBuffer.limit() / frames;
+					DynamicSoundManager.LOGGER.info(Float.toString(plyTime));
+
 					staticSound = new StaticSound(byteBuffer, oggAudioStream.getFormat());
 				}
 				return staticSound;

@@ -1,5 +1,7 @@
 package net.denanu.dynamicsoundmanager.player_api;
 
+import java.util.List;
+
 import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,5 +37,11 @@ public class DynamicWeightedSoundSet extends WeightedSoundSet {
 	@Override
 	public Sound getSound(final Random random) {
 		return super.getSound(random);
+	}
+
+	public void addSounds(final List<DynamicSoundConfigs> sounds) {
+		for (final DynamicSoundConfigs sound : sounds) {
+			this.addSound(sound);
+		}
 	}
 }

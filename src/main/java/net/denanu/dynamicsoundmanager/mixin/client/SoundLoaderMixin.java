@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSound;
 import net.minecraft.client.sound.SoundLoader;
 import net.minecraft.client.sound.StaticSound;
@@ -17,7 +16,6 @@ import net.minecraft.util.Identifier;
 public class SoundLoaderMixin {
 	@Inject(method="loadStatic", at=@At("HEAD"), cancellable=true)
 	public void loadStaticInjector(final Identifier id, final CallbackInfoReturnable<CompletableFuture<StaticSound>> cir) {
-		DynamicSoundManager.LOGGER.info("load: " + id.toString());
 		if (id.getPath() == DynamicSound.SHOULD_LOAD_DYNAMICLY) {
 			cir.setReturnValue(DynamicSound.loadDynamicSound(id));
 			cir.cancel();

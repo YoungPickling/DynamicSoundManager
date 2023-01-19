@@ -19,10 +19,14 @@ public class SoundGroup {
 
 	public SoundGroup(final PacketByteBuf buf) {
 		this.id = buf.readIdentifier();
+		this.sounds = buf.readList(DynamicSoundConfigs::new);
 	}
 
 	public void writeBuf(final PacketByteBuf buf) {
 		buf.writeIdentifier(this.id);
+		buf.writeCollection(this.sounds, (buf2, sound) -> {
+			sound.toBuf(buf2);
+		});
 	}
 
 	public Identifier getId() {
@@ -54,5 +58,13 @@ public class SoundGroup {
 			return soundContainer;
 		}
 		return null;
+	}
+
+	public void addConfig(final DynamicSoundConfigs config) {
+		this.sounds.add(config);
+	}
+
+	public void clear() {
+		this.sounds.clear();
 	}
 }

@@ -31,6 +31,7 @@ public class InitTransferBidirectionalPacket {
 			final int inboundKey = FileSynchronizer.openInbound(file);
 			final int outboundKey = buf.readInt();
 			ServerSoundGroups.metadata.changeVersion(id, filename);
+			ServerSoundGroups.addConfig(id, filename);
 			RequestMoreDataBidirectionalPacket.send(player, inboundKey, outboundKey);
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
@@ -54,7 +55,7 @@ public class InitTransferBidirectionalPacket {
 		}
 	}
 
-	private static File toFile(final Path dir, final Identifier group, final String filename) {
+	public static File toFile(final Path dir, final Identifier group, final String filename) {
 		return dir.resolve(group.getNamespace()).resolve(group.getPath()).resolve(filename).toFile();
 	}
 

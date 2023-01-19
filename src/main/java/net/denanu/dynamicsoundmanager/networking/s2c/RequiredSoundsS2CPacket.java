@@ -3,19 +3,16 @@ package net.denanu.dynamicsoundmanager.networking.s2c;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.groups.ServerSoundGroups;
+import net.denanu.dynamicsoundmanager.groups.SoundGroup;
 import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
-import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
 import net.denanu.dynamicsoundmanager.networking.c2s.RequestDownloadFilesC2SPacket;
-import net.denanu.dynamicsoundmanager.player_api.DebugSounds;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.sound.WeightedSoundSet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Pair;
@@ -32,15 +29,16 @@ public class RequiredSoundsS2CPacket {
 			return new Pair<>(key, version);
 		});
 
-		ClientSoundGroupManager.soundIds = buf.readCollection(ArrayList::new, PacketByteBuf::readIdentifier);
-		ClientSoundGroupManager.populateSounds(data, ClientSoundGroupManager.addClientSoundData());
+		final List<SoundGroup> sounds = buf.readList(SoundGroup::new);
+		ClientSoundGroupManager.init(sounds);
+		ClientSoundGroupManager.populateSounds(sounds, ClientSoundGroupManager.addClientSoundData());
 
 
 		final List<String> nonMatching = ClientSoundGroupManager.metadata.getNonMatchingVersions(data);
 		RequestDownloadFilesC2SPacket.send(nonMatching);
 
-		final WeightedSoundSet sound = ((SoundManagerMixin)client.getSoundManager()).getSounds().get(DebugSounds.TEST_ID);
-		DynamicSoundManager.LOGGER.info(sound.toString());
+		//final WeightedSoundSet sound = ((SoundManagerMixin)client.getSoundManager()).getSounds().get(DebugSounds.TEST_ID);
+		//DynamicSoundManager.LOGGER.info(sound.toString());
 	}
 
 	public static PacketByteBuf toBuf() {
@@ -51,7 +49,7 @@ public class RequiredSoundsS2CPacket {
 		});
 
 		buf.writeCollection(ServerSoundGroups.sounds.entrySet(), (buf2, entry) -> {
-			buf2.writeIdentifier(entry.getKey());
+			entry.getValue().writeBuf(buf2);
 		});
 
 		return buf;
