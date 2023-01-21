@@ -5,7 +5,9 @@ import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidir
 import net.denanu.dynamicsoundmanager.networking.bidirectional.RequestMoreDataBidirectionalPacket;
 import net.denanu.dynamicsoundmanager.networking.bidirectional.TransferDateBidirectionalPacket;
 import net.denanu.dynamicsoundmanager.networking.c2s.RequestDownloadFilesC2SPacket;
+import net.denanu.dynamicsoundmanager.networking.c2s.UpdatePlayConfigsC2SPacket;
 import net.denanu.dynamicsoundmanager.networking.s2c.RequiredSoundsS2CPacket;
+import net.denanu.dynamicsoundmanager.networking.s2c.UpdateePlayConfigsS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
@@ -19,10 +21,11 @@ public class NetworkHandler {
 
 	public class S2C {
 		public static final Identifier REQUIRED_SOUNDS = 	Identifier.of(DynamicSoundManager.MOD_ID, "required_sounds");
-
+		public static final Identifier SEND_SOUND_CONFIG_UPDATE = Identifier.of(DynamicSoundManager.MOD_ID, "update_config");
 
 		private static void register() {
 			ClientPlayNetworking.registerGlobalReceiver(S2C.REQUIRED_SOUNDS, 	RequiredSoundsS2CPacket::receive);
+			ClientPlayNetworking.registerGlobalReceiver(S2C.SEND_SOUND_CONFIG_UPDATE, UpdateePlayConfigsS2CPacket::receive);
 
 			ClientPlayNetworking.registerGlobalReceiver(Bidirectional.INIT_TRANSFER, 	InitTransferBidirectionalPacket::receive);
 			ClientPlayNetworking.registerGlobalReceiver(Bidirectional.REQUEST_DATA, 	RequestMoreDataBidirectionalPacket::receive);
@@ -31,10 +34,12 @@ public class NetworkHandler {
 	}
 
 	public class C2S {
-		public static final Identifier REQUEST_FILES = 	Identifier.of(DynamicSoundManager.MOD_ID, "request_files");
+		public static final Identifier REQUEST_FILES 			= Identifier.of(DynamicSoundManager.MOD_ID, "request_files");
+		public static final Identifier SEND_SOUND_CONFIG_UPDATE = Identifier.of(DynamicSoundManager.MOD_ID, "update_config");
 
 		private static void register() {
-			ServerPlayNetworking.registerGlobalReceiver(C2S.REQUEST_FILES, 		RequestDownloadFilesC2SPacket::receive);
+			ServerPlayNetworking.registerGlobalReceiver(C2S.REQUEST_FILES, 				RequestDownloadFilesC2SPacket::receive);
+			ServerPlayNetworking.registerGlobalReceiver(C2S.SEND_SOUND_CONFIG_UPDATE, 	UpdatePlayConfigsC2SPacket::receive);
 
 			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.INIT_TRANSFER, 	InitTransferBidirectionalPacket::receive);
 			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.REQUEST_DATA, 	RequestMoreDataBidirectionalPacket::receive);

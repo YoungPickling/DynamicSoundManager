@@ -11,6 +11,7 @@ import net.denanu.dynamicsoundmanager.player_api.DebugSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.world.World;
 
 public class DynamicSoundManager implements ModInitializer {
 
@@ -25,5 +26,10 @@ public class DynamicSoundManager implements ModInitializer {
 		NetworkHandler.registerC2SPackets();
 
 		CommandRegistrationCallback.EVENT.register(DebugCommands::register);
+
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			server.getWorld(World.OVERWORLD).getPersistentStateManager()
+			.getOrCreate(ServerSoundGroups::fromNbt, ServerSoundGroups::loadDefault, DynamicSoundManager.MOD_ID + ":dynamic_configs");
+		});
 	}
 }

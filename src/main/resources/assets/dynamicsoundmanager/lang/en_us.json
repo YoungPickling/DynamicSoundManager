@@ -1,10 +1,21 @@
 {
 	"dynamicsoundmanager.gui.title.configs": "Custom Audio Manager",
+	"dynamicsoundmanager.gui.title.dynamic-configurer": "Audio Configs",
+	"dynamicsoundmanager.gui.title.not-in-game": "You are not in a Game, Join a game to configure Auido Configs",
+	"dynamicsoundmanager.gui.title.no-sounds": "No Sounds Available.",
 	
 	"dynamicsoundmanager.button.home": "Home",
 	"dynamicsoundmanager.button.return": "Return",
 	"dynamicsoundmanager.button.import": "Import",
 	"dynamicsoundmanager.button.import_file": "Import",
 	
+	"dynamicsoundmanager.gui.slider.volume": "Volume",
+	"dynamicsoundmanager.gui.slider.pitch":  "Pitch",
+	"dynamicsoundmanager.gui.slider.attenuation": "Attenuation",
+	"dynamicsoundmanager.gui.slider.weight": "Play Weight",
+	
+	"dynamicsoundmanager.gui.button.upload": "Upload",
+	"dynamicsoundmanager.gui.button.delete": "Delete",
+		
 	"dynamicsoundmanager.test": "Test"
 }

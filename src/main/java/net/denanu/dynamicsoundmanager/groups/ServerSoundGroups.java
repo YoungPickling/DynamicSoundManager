@@ -10,11 +10,14 @@ import javax.annotation.Nullable;
 
 import fi.dy.masa.malilib.gui.interfaces.IDirectoryCache;
 import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
+import net.denanu.dynamicsoundmanager.networking.s2c.UpdateePlayConfigsS2CPacket;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -22,12 +25,14 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.PersistentState;
 
-public class ServerSoundGroups implements IDirectoryCache {
+public class ServerSoundGroups extends PersistentState implements IDirectoryCache {
 	public static HashMap<Identifier, SoundGroup> sounds = new HashMap<>();
 
 	public static Path path;
 	public static FileSynchronizationMetadataBuilder metadata;
+	private static boolean dirty = false;
 
 	public static FileFilter AUDIO_FILE_FILTER = dir -> {
 		if (dir.isFile() && dir.getName().endsWith(".ogg")) {
@@ -109,5 +114,41 @@ public class ServerSoundGroups implements IDirectoryCache {
 
 	private static DynamicSoundConfigs getConfig(final long seed, final Identifier id) {
 		return ServerSoundGroups.sounds.get(id).getConfig(seed);
+	}
+
+	public static void modifyConfig(final MinecraftServer server, final DynamicSoundConfigs config) {
+		ServerSoundGroups.sounds.get(config.getId()).modifyConfig(config);
+		ServerSoundGroups.dirty = true;
+		UpdateePlayConfigsS2CPacket.send(server, config);
+	}
+
+	@Override
+	public NbtCompound writeNbt(final NbtCompound nbt) {
+		for (final Entry<Identifier, SoundGroup> sound : ServerSoundGroups.sounds.entrySet()) {
+			nbt.put(sound.getKey().toString(), sound.getValue().toNbt());
+		}
+		ServerSoundGroups.dirty = false;
+		return nbt;
+	}
+
+	public static ServerSoundGroups fromNbt(final NbtCompound nbt) {
+		for (final Entry<Identifier, SoundGroup> key : ServerSoundGroups.sounds.entrySet()) {
+			if (nbt.contains(key.getKey().toString())) {
+				key.getValue().load(nbt.getList(key.getKey().toString(), NbtElement.COMPOUND_TYPE));
+			}
+		}
+
+		return new ServerSoundGroups();
+	}
+
+	public static ServerSoundGroups loadDefault() {
+		final ServerSoundGroups out = new ServerSoundGroups();
+		ServerSoundGroups.dirty = true;
+		return out;
+	}
+
+	@Override
+	public boolean isDirty() {
+		return ServerSoundGroups.dirty;
 	}
 }

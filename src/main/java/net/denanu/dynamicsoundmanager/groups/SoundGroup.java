@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
@@ -66,5 +69,38 @@ public class SoundGroup {
 
 	public void clear() {
 		this.sounds.clear();
+	}
+
+	public void modifyConfig(final DynamicSoundConfigs config) {
+		final String key = config.getKey();
+		for (final DynamicSoundConfigs base : this.sounds) {
+			final String baseKey = base.getKey();
+			final boolean val = key.equals(baseKey);
+			if (val) {
+				base.set(config);
+				break;
+			}
+		}
+	}
+
+	public NbtElement toNbt() {
+		final NbtList list = new NbtList();
+
+		for (final DynamicSoundConfigs sound : this.sounds) {
+			list.add(sound.toNbt());
+		}
+
+		return list;
+	}
+
+	public void load(final NbtList list) {
+		int idx = 0;
+		for (final DynamicSoundConfigs config : this.sounds) {
+			if (list.get(idx) instanceof final NbtCompound nbt) {
+				config.load(nbt);
+			}
+
+			idx++;
+		}
 	}
 }

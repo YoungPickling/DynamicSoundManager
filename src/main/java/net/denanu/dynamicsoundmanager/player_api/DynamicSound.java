@@ -17,17 +17,25 @@ import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.StaticSound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.floatprovider.FloatSupplier;
+import net.minecraft.util.math.floatprovider.ConstantFloatProvider;
 
 public class DynamicSound extends Sound {
-	private final String key;
+	private final DynamicSoundConfigs config;
 
 	public static final String SHOULD_LOAD_DYNAMICLY = DynamicSoundManager.MOD_ID + ".dynamic_loader";
 
-	public DynamicSound(final Identifier id, final FloatSupplier volume, final FloatSupplier pitch, final int weight,
-			final RegistrationType registrationType, final boolean stream, final boolean preload, final int attenuation, final String key) {
-		super(id.toString(), volume, pitch, weight, registrationType, stream, preload, attenuation);
-		this.key = key;
+	public DynamicSound(final DynamicSoundConfigs config) {
+		super(
+				config.getId().toString(),
+				ConstantFloatProvider.create(config.getVolume()),
+				ConstantFloatProvider.create(config.getPitch()),
+				config.getWeight(),
+				config.getRegistrationType(),
+				config.getStream(),
+				config.getPreload(),
+				config.getAttenuation()
+				);
+		this.config = config;
 	}
 
 	@Override
@@ -39,14 +47,14 @@ public class DynamicSound extends Sound {
 				+ "/"
 				+ this.getIdentifier().getPath()
 				+ "/"
-				+ this.key,
+				+ this.config.getKey(),
 				DynamicSound.SHOULD_LOAD_DYNAMICLY);
 		DynamicSoundManager.LOGGER.info(id.toString());
 		return id;
 	}
 
 	public String getKey() {
-		return this.key;
+		return this.config.getKey();
 	}
 
 	public static CompletableFuture<StaticSound> loadDynamicSound(final Identifier id) {
@@ -69,5 +77,9 @@ public class DynamicSound extends Sound {
 				throw new CompletionException(iOException);
 			}
 		}, Util.getMainWorkerExecutor());
+	}
+
+	public DynamicSoundConfigs getConfig() {
+		return this.config;
 	}
 }

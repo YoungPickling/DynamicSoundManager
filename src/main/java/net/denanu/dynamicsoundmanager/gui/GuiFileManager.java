@@ -90,7 +90,7 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 
 		final MinecraftClient client = MinecraftClient.getInstance();
 		final AudioPlayerWidget.AudioFileChangedCallback enableCallback = (final File file) -> {
-			button.setEnabled(client.world != null && this.audioPlayer.hasAudioFile() && GuiConfigs.getId() != null);
+			button.setEnabled(client.world != null && this.audioPlayer.hasAudioFile() && GuiDynamicConfigurer.getId() != null);
 		};
 		enableCallback.update(null);
 		this.audioPlayer.addAudioFileChangedCallbacks(enableCallback);
@@ -103,7 +103,7 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 
 	private void uploadFile() {
 		final File audio = this.audioPlayer.getAudioFile();
-		final Identifier group = GuiConfigs.getId();
+		final Identifier group = GuiDynamicConfigurer.getId();
 
 		InitTransferBidirectionalPacket.send(audio, group);
 	}
