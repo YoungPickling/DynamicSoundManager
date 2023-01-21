@@ -13,6 +13,7 @@ import fi.dy.masa.malilib.util.FileUtils;
 import net.denanu.dynamicsoundmanager.groups.FileSynchronizationMetadataBuilder;
 import net.denanu.dynamicsoundmanager.groups.SoundGroup;
 import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
+import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.denanu.dynamicsoundmanager.player_api.DynamicWeightedSoundSet;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
 import net.fabricmc.api.EnvType;
@@ -103,7 +104,13 @@ public class ClientSoundGroupManager {
 		for (final SoundGroup sound_data : configs) {
 			groups.get(sound_data.getId()).addSounds(sound_data.sounds);
 		}
+	}
 
+	public static void modifyConfig(final DynamicSoundConfigs config) {
+		final WeightedSoundSet set = ClientSoundGroupManager.getSounds().get(config.getId());
+		if (set instanceof final DynamicWeightedSoundSet dynamicSet) {
+			dynamicSet.modifySound(config);
+		}
 	}
 }
 

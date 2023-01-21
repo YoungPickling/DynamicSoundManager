@@ -16,19 +16,22 @@ import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidir
 import net.denanu.dynamicsoundmanager.utils.FileKey;
 import net.minecraft.client.sound.OggAudioStream;
 import net.minecraft.client.sound.Sound;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 public class DynamicSoundConfigs {
-	private final Identifier id;
-	private final String key;
+	private Identifier id;
+	private String key;
 	private float volume = 1f, pitch = 1f;
 	private Sound.RegistrationType registrationType = Sound.RegistrationType.FILE;
 	private boolean stream = false, preload = false;
 	private int attenuation = 16;
-	private final int weight = 1;
+	private int weight = 1;
 	private Optional<Integer> tickPlayTime;
+
+	private boolean modified = false;
 
 	public DynamicSoundConfigs(final Identifier id, final String key) {
 		this.id = id;
@@ -44,7 +47,31 @@ public class DynamicSoundConfigs {
 		this.stream 			= buf.readBoolean();
 		this.preload 			= buf.readBoolean();
 		this.attenuation 		= buf.readInt();
+		this.weight				= buf.readInt();
 		this.setup();
+	}
+
+	public void load(final NbtCompound nbt) {
+		this.key 				= nbt.getString("key");
+		this.volume				= nbt.getFloat("volume");
+		this.pitch				= nbt.getFloat("pitch");
+		this.stream				= nbt.getBoolean("stream");
+		this.preload			= nbt.getBoolean("preload");
+		this.attenuation		= nbt.getInt("attenuation");
+		this.weight				= nbt.getInt("weight");
+		this.setup();
+	}
+
+	public void set(final DynamicSoundConfigs config) {
+		this.id 				= config.id;
+		this.key 				= config.key;
+		this.volume 			= config.volume;
+		this.pitch 				= config.pitch;
+		this.registrationType	= config.registrationType;
+		this.stream 			= config.stream;
+		this.preload 			= config.preload;
+		this.attenuation 		= config.attenuation;
+		this.weight				= config.weight;
 	}
 
 	public static DynamicSoundConfigs of(final Identifier id, final String key) {
@@ -64,12 +91,30 @@ public class DynamicSoundConfigs {
 		buf.writeBoolean(this.stream);
 		buf.writeBoolean(this.preload);
 		buf.writeInt(this.attenuation);
+		buf.writeInt(this.weight);
 		this.setup();
 		return buf;
 	}
 
+	public NbtCompound toNbt() {
+		final NbtCompound nbt = new NbtCompound();
+
+		nbt.putString("key", 		this.key);
+		nbt.putFloat("volume", 		this.volume);
+		nbt.putFloat("pitch", 		this.pitch);
+		nbt.putBoolean("stream",	this.stream);
+		nbt.putBoolean("preload",	this.preload);
+		nbt.putInt("attenuation",	this.attenuation);
+		nbt.putInt("weight", this.weight);
+
+		return nbt;
+	}
+
 	public void setVolume(final float volume) {
-		this.volume = volume;
+		if (volume != this.volume) {
+			this.volume = volume;
+			this.change();
+		}
 	}
 
 	public float getVolume() {
@@ -77,7 +122,10 @@ public class DynamicSoundConfigs {
 	}
 
 	public void setPitch(final float pitch) {
-		this.pitch = pitch;
+		if (this.pitch != pitch) {
+			this.pitch = pitch;
+			this.change();
+		}
 	}
 
 	public float getPitch() {
@@ -85,7 +133,10 @@ public class DynamicSoundConfigs {
 	}
 
 	public void setRegistrationType(final Sound.RegistrationType type) {
-		this.registrationType = type;
+		if (this.registrationType != type) {
+			this.registrationType = type;
+			this.change();
+		}
 	}
 
 	public Sound.RegistrationType getRegistrationType() {
@@ -93,7 +144,10 @@ public class DynamicSoundConfigs {
 	}
 
 	public void setStream(final boolean stream) {
-		this.stream = stream;
+		if (this.stream != stream) {
+			this.stream = stream;
+			this.change();
+		}
 	}
 
 	public boolean getStream() {
@@ -101,7 +155,10 @@ public class DynamicSoundConfigs {
 	}
 
 	public void setPreload(final boolean preload) {
-		this.preload = preload;
+		if (this.preload != preload) {
+			this.preload = preload;
+			this.change();
+		}
 	}
 
 	public boolean getPreload() {
@@ -109,7 +166,10 @@ public class DynamicSoundConfigs {
 	}
 
 	public void setAttenuation(final int attenuation) {
-		this.attenuation = attenuation;
+		if (this.attenuation != attenuation) {
+			this.attenuation = attenuation;
+			this.change();
+		}
 	}
 
 	public int getAttenuation() {
@@ -122,6 +182,13 @@ public class DynamicSoundConfigs {
 
 	public String getKey() {
 		return this.key;
+	}
+
+	public void setWeight(final int weight) {
+		if (this.weight != weight) {
+			this.weight = weight;
+			this.change();
+		}
 	}
 
 	public int getWeight() {
@@ -158,5 +225,18 @@ public class DynamicSoundConfigs {
 	@Override
 	public String toString() {
 		return this.id.toString() + ":" + this.key;
+	}
+
+	private void change() {
+		this.modified = true;
+	}
+
+	public boolean isModified() {
+		return this.modified;
+	}
+
+	// client only
+	public void update() {
+		this.modified = false;
 	}
 }

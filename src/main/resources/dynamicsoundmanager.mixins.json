@@ -10,7 +10,8 @@
   	"SoundManagerMixin"
   ],
   "client": [
-  	"client.SoundLoaderMixin"
+  	"client.SoundLoaderMixin",
+  	"client.IWeightedSoundSetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

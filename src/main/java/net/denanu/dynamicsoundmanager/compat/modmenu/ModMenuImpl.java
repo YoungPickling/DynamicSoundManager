@@ -3,7 +3,7 @@ package net.denanu.dynamicsoundmanager.compat.modmenu;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 
-import net.denanu.dynamicsoundmanager.gui.GuiConfigs;
+import net.denanu.dynamicsoundmanager.gui.GuiDynamicConfigurer;
 
 public class ModMenuImpl implements ModMenuApi
 {
@@ -11,7 +11,7 @@ public class ModMenuImpl implements ModMenuApi
 	public ConfigScreenFactory<?> getModConfigScreenFactory()
 	{
 		return screen -> {
-			final GuiConfigs gui = new GuiConfigs();
+			final GuiDynamicConfigurer gui = new GuiDynamicConfigurer();
 			gui.setParent(screen);
 			return gui;
 		};
