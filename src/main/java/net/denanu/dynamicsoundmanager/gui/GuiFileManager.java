@@ -108,7 +108,7 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 	}
 
 	private void uploadFile() {
-		final File audio = this.audioPlayer.getAudioFile();
+		final File audio = AudioPlayerWidget.getAudioFile();
 		final Identifier group = GuiDynamicConfigurer.getId();
 
 		InitTransferBidirectionalC2SPacket.send(audio, group);
@@ -164,6 +164,7 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 	public void close() {
 		super.close();
 		ClientSoundGroupManager.fileManager = null;
+		AudioPlayerWidget.playMenuMusic();
 	}
 
 	public void update() {

@@ -10,7 +10,9 @@
   	"SoundManagerMixin"
   ],
   "client": [
+  	"client.IMusicTrackerAccessor",
   	"client.SoundLoaderMixin",
+  	"client.MusicTrackerMixin",
   	"client.IWeightedSoundSetMixin"
   ],
   "injectors": {

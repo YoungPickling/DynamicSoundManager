@@ -2,8 +2,6 @@ package net.denanu.dynamicsoundmanager.player_api;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
 import net.denanu.dynamicsoundmanager.mixin.client.IWeightedSoundSetMixin;
 import net.fabricmc.api.EnvType;
@@ -59,6 +57,8 @@ public class DynamicWeightedSoundSet extends WeightedSoundSet {
 	}
 
 	public void setSound(final Sound sound) {
-		((IWeightedSoundSetMixin)this).setSounds(ImmutableList.of(sound));
+		final List<SoundContainer<Sound>> sounds = ((IWeightedSoundSetMixin)this).getSounds();
+		sounds.clear();
+		sounds.add(sound);
 	}
 }

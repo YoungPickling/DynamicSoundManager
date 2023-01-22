@@ -3,42 +3,23 @@ package net.denanu.dynamicsoundmanager.gui.widgets;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import com.puttysoftware.audio.ogg.OggFile;
+import java.util.Map;
 
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.widgets.WidgetContainer;
-import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.denanu.dynamicsoundmanager.gui.Icons;
 import net.denanu.dynamicsoundmanager.player_api.DynamicWeightedSoundSet;
-import net.denanu.dynamicsoundmanager.player_api.PreviewSound;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MusicType;
+import net.minecraft.client.sound.WeightedSoundSet;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.sound.MusicSound;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class AudioPlayerWidget extends WidgetContainer {
-	private static final Identifier MUSIC_PREVIEW_ID = Identifier.of(DynamicSoundManager.MOD_ID, "music.preview");
-	private static final SoundEvent MUSIC_PREVIEW = AudioPlayerWidget.register(AudioPlayerWidget.MUSIC_PREVIEW_ID);
-	public static final MusicSound MUSIC = new MusicSound(AudioPlayerWidget.MUSIC_PREVIEW, 20, 600, true);
-
-	private static final PreviewSound PREVIEW_SOUND = new PreviewSound(Identifier.of(DynamicSoundManager.MOD_ID, "music.preview").toString());
-
-	private static SoundEvent register(final Identifier id) {
-		return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
-	}
-
-
-	private File audioFile = null;
-	private Optional<OggFile> player;
 	private ButtonGeneric playButton;
 	private PlayStates state;
 	private ButtonGeneric stopButton;
@@ -54,11 +35,14 @@ public class AudioPlayerWidget extends WidgetContainer {
 	public AudioPlayerWidget(final int x, final int y, final int width, final int height) {
 		super(x, y, width, height);
 		this.state = PlayStates.STOPED;
-		this.player = Optional.empty();
 		this.initGui();
 
-		final DynamicWeightedSoundSet soundSet = (DynamicWeightedSoundSet)ClientSoundGroupManager.getSounds().get(AudioPlayerWidget.MUSIC_PREVIEW_ID);
-		soundSet.setSound(AudioPlayerWidget.PREVIEW_SOUND);
+		final Map<Identifier, WeightedSoundSet> soundSets = ClientSoundGroupManager.getSounds();
+		final DynamicWeightedSoundSet soundSet = new DynamicWeightedSoundSet(AudioPlayerWidgetGlobals.MUSIC_PREVIEW_ID, "Dynamic sound Preview sound");
+		soundSet.setSound(AudioPlayerWidgetGlobals.PREVIEW_SOUND);
+		soundSets.put(
+				AudioPlayerWidgetGlobals.MUSIC_PREVIEW_ID,
+				soundSet);
 	}
 
 	private void initGui() {
@@ -71,20 +55,13 @@ public class AudioPlayerWidget extends WidgetContainer {
 		this.shouldUpdate = true;
 	}
 
-	@SuppressWarnings("removal")
 	private void addPlayButton(final int x) {
 		this.playButton = new ButtonGeneric(x, this.y, Icons.PLAY_BUTTON);
-		this.playButton.setEnabled(this.hasAudioFile());
+		this.playButton.setEnabled(this.hasAudioFile() && this.state == PlayStates.STOPED);
 		this.addButton(this.playButton, (b, mouse) -> {
-			if (this.player.isPresent()) {
-				this.player.get().resume();
-			}
-			else {
-				this.player = Optional.of(new OggFile(this.audioFile.getAbsolutePath()));
-				this.player.get().start();
-			}
-			this.state = PlayStates.PLAYING;
 			MinecraftClient.getInstance().getMusicTracker().stop();
+			MinecraftClient.getInstance().getMusicTracker().play(AudioPlayerWidgetGlobals.MUSIC);
+			this.state = PlayStates.PLAYING;
 			this.resetGui();
 		});
 
@@ -92,51 +69,35 @@ public class AudioPlayerWidget extends WidgetContainer {
 	}
 
 	public boolean hasAudioFile() {
-		return this.audioFile != null;
-	}
-
-	@SuppressWarnings("removal")
-	private void addPauseButton(final int x) {
-		this.playButton = new ButtonGeneric(this.x, this.y, Icons.PAUSE_BUTTON);
-		this.addButton(this.playButton, (b, mouse) -> {
-			this.player.get().suspend();
-			AudioPlayerWidget.playMenuMusic();
-			this.state = PlayStates.STOPED;
-			this.resetGui();
-		});
+		return AudioPlayerWidgetGlobals.PREVIEW_SOUND.getLocationStr() != null;
 	}
 
 	private int addStopButton(final int x) {
 		this.stopButton = new ButtonGeneric(x, this.y, Icons.TERMINATE_BUTTON);
 		this.stopButton.setEnabled(this.state == PlayStates.PLAYING);
 		this.addButton(this.stopButton, (b, mouse) -> {
-			if (this.player.isPresent()) {
-				this.player.get().stopPlayer();
-				AudioPlayerWidget.playMenuMusic();
-				this.state = PlayStates.STOPED;
-				this.player = Optional.empty();
-				this.resetGui();
-			}
+			AudioPlayerWidget.playMenuMusic();
+			this.state = PlayStates.STOPED;
+			this.resetGui();
+
 		});
 
 		return x + this.stopButton.getWidth() + 2;
 	}
 
-	private static void playMenuMusic() {
+	public static void playMenuMusic() {
+		MinecraftClient.getInstance().getMusicTracker().stop();
 		MinecraftClient.getInstance().getMusicTracker().play(MusicType.MENU);
 	}
 
 	private int addPlayPauseButton(final int x) {
-		switch(this.state) {
-		case STOPED -> 	this.addPlayButton(x);
-		case PLAYING -> this.addPauseButton(x);
-		}
+		this.addPlayButton(x);
 
 		return x + this.playButton.getWidth() + 2;
 	}
 
 	public void load(final File file) {
-		this.audioFile = file;
+		AudioPlayerWidgetGlobals.PREVIEW_SOUND.setLocation(file.getAbsolutePath());
 		this.updateCallbacks();
 	}
 
@@ -145,10 +106,6 @@ public class AudioPlayerWidget extends WidgetContainer {
 	}
 
 	public void remove() {
-		if (this.player.isPresent()) {
-			this.player.get().stopPlayer();
-		}
-
 		if (this.state == PlayStates.PLAYING) {
 			AudioPlayerWidget.playMenuMusic();
 		}
@@ -175,7 +132,7 @@ public class AudioPlayerWidget extends WidgetContainer {
 
 	private void updateCallbacks() {
 		for (final AudioFileChangedCallback calback : this.audioFileChangedCallbacks) {
-			calback.update(this.audioFile);
+			calback.update(AudioPlayerWidget.getAudioFile());
 		}
 	}
 
@@ -183,7 +140,7 @@ public class AudioPlayerWidget extends WidgetContainer {
 		void update(File audiofile);
 	}
 
-	public File getAudioFile() {
-		return this.audioFile;
+	public static File getAudioFile() {
+		return new File(AudioPlayerWidgetGlobals.PREVIEW_SOUND.getLocationStr());
 	}
 }
