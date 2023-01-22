@@ -3,14 +3,14 @@
   "id": "dynamic_sound_manager",
   "version": "${mod_version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Dynamic Sound Manager",
+  "description": "A system for dynamically handeling audio files. This is allowes for you to get your entities to play whatever sounds you want. It does require a mod registering a dynamic sound manager",
   "authors": [
     "denanu"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/JulianWww/DynamicSoundManager/blob/main/README.md",
+    "sources": "https://github.com/JulianWww/DynamicSoundManager"
   },
 
   "license": "CC0-1.0",
@@ -18,7 +18,7 @@
 
   "environment": "*",
   "entrypoints": {
-  	"modmenu": [
+    "modmenu": [
       "net.denanu.dynamicsoundmanager.compat.modmenu.ModMenuImpl"
     ],
     "main": [
@@ -39,6 +39,6 @@
     "java": ">=17"
   },
   "suggests": {
-    "another-mod": "*"
+    "another-mod": "modmenu"
   }
 }
