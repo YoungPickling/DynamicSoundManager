@@ -1,6 +1,7 @@
 package net.denanu.dynamicsoundmanager.networking.c2s;
 
 import net.denanu.dynamicsoundmanager.groups.ServerSoundGroups;
+import net.denanu.dynamicsoundmanager.gui.Utils;
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -14,8 +15,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class UpdatePlayConfigsC2SPacket {
 	public static void receive(final MinecraftServer server, final ServerPlayerEntity player, final ServerPlayNetworkHandler handler,
 			final PacketByteBuf buf, final PacketSender responseSender) {
-		final DynamicSoundConfigs config = new DynamicSoundConfigs(buf);
-		ServerSoundGroups.modifyConfig(server, config);
+		if (Utils.hasModificationPermission(player)) {
+			final DynamicSoundConfigs config = new DynamicSoundConfigs(buf);
+			ServerSoundGroups.modifyConfig(server, config);
+		}
 
 	}
 	public static PacketByteBuf toBuf(final DynamicSoundConfigs config) {

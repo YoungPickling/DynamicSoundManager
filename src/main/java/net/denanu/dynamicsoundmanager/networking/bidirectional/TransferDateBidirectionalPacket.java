@@ -3,6 +3,7 @@ package net.denanu.dynamicsoundmanager.networking.bidirectional;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import net.denanu.dynamicsoundmanager.gui.Utils;
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
 import net.denanu.dynamicsoundmanager.networking.s2c.RequiredSoundsS2CPacket;
 import net.denanu.dynamicsoundmanager.networking.shared.FileSynchronizer;
@@ -20,13 +21,15 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class TransferDateBidirectionalPacket {
 	public static void receive(final MinecraftServer server, final ServerPlayerEntity player, final ServerPlayNetworkHandler handler,
 			final PacketByteBuf buf, final PacketSender responseSender) {
-		final int inboundKey 	= buf.readInt();
-		final int outboundKey 	= buf.readInt();
-		if (TransferDateBidirectionalPacket.run(buf, inboundKey)) {
-			RequestMoreDataBidirectionalPacket.send(player, inboundKey, outboundKey);
-		}
-		else {
-			TransferDateBidirectionalPacket.update(server);
+		if (Utils.hasModificationPermission(player)) {
+			final int inboundKey 	= buf.readInt();
+			final int outboundKey 	= buf.readInt();
+			if (TransferDateBidirectionalPacket.run(buf, inboundKey)) {
+				RequestMoreDataBidirectionalPacket.send(player, inboundKey, outboundKey);
+			}
+			else {
+				TransferDateBidirectionalPacket.update(server);
+			}
 		}
 	}
 

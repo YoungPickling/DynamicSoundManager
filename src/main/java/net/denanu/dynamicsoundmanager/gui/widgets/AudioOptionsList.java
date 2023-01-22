@@ -7,6 +7,7 @@ import java.util.List;
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
 import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.denanu.dynamicsoundmanager.gui.GuiDynamicConfigurer;
+import net.denanu.dynamicsoundmanager.gui.Utils;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioOptionsConfig.AudioOptionsEntry;
 import net.denanu.dynamicsoundmanager.mixin.client.IWeightedSoundSetMixin;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSound;
@@ -21,7 +22,7 @@ public class AudioOptionsList extends WidgetListBase<AudioOptionsEntry, AudioOpt
 		super(x, y, width, height, null);
 
 		this.allowMultiSelection = true;
-		this.browserEntryHeight = 70;
+		this.browserEntryHeight = Utils.hasModificationPermission() ? 70 : 22;
 	}
 
 	@Override

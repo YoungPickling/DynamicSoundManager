@@ -6,6 +6,7 @@ import java.nio.file.Path;
 
 import net.denanu.dynamicsoundmanager.groups.ServerSoundGroups;
 import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
+import net.denanu.dynamicsoundmanager.gui.Utils;
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
 import net.denanu.dynamicsoundmanager.networking.shared.FileSynchronizer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -23,18 +24,20 @@ import net.minecraft.util.Identifier;
 public class InitTransferBidirectionalPacket {
 	public static void receive(final MinecraftServer server, final ServerPlayerEntity player, final ServerPlayNetworkHandler handler,
 			final PacketByteBuf buf, final PacketSender responseSender) {
-		final Identifier id = buf.readIdentifier();
-		final String filename = buf.readString();
-		final File file = InitTransferBidirectionalPacket.toFile(ServerSoundGroups.path, id, filename);
+		if (Utils.hasModificationPermission(player)) {
+			final Identifier id = buf.readIdentifier();
+			final String filename = buf.readString();
+			final File file = InitTransferBidirectionalPacket.toFile(ServerSoundGroups.path, id, filename);
 
-		try {
-			final int inboundKey = FileSynchronizer.openInbound(file);
-			final int outboundKey = buf.readInt();
-			ServerSoundGroups.metadata.changeVersion(id, filename);
-			ServerSoundGroups.addConfig(id, filename);
-			RequestMoreDataBidirectionalPacket.send(player, inboundKey, outboundKey);
-		} catch (final FileNotFoundException e) {
-			e.printStackTrace();
+			try {
+				final int inboundKey = FileSynchronizer.openInbound(file);
+				final int outboundKey = buf.readInt();
+				ServerSoundGroups.metadata.changeVersion(id, filename);
+				ServerSoundGroups.addConfig(id, filename);
+				RequestMoreDataBidirectionalPacket.send(player, inboundKey, outboundKey);
+			} catch (final FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

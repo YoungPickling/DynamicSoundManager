@@ -38,16 +38,18 @@ public class AudioOptionsConfig extends WidgetListEntryBase<AudioOptionsEntry> {
 
 		x = Utils.buildNextX(x, this.addNameWidget(x, y, h));
 
-		this.addDeleteButton(xBack - 2,     y, h, w);
-		y = Utils.buildNextY(this.addUploadButton(xBack+w, y, h, w));
+		if (Utils.hasModificationPermission()) {
+			this.addDeleteButton(xBack - 2,     y, h, w);
+			y = Utils.buildNextY(this.addUploadButton(xBack+w, y, h, w));
 
-		h = 10;
-		w = 100;
+			h = 10;
+			w = 100;
 
-		y = Utils.buildNextY(this.addPitchControll(xBack, y, h, w));
-		y = Utils.buildNextY(this.addVolumeControll(xBack, y, h, w));
-		y = Utils.buildNextY(this.addAttenuationControll(xBack, y, h, w));
-		y = Utils.buildNextY(this.addWeightControll(xBack, y, h, w));
+			y = Utils.buildNextY(this.addPitchControll(xBack, y, h, w));
+			y = Utils.buildNextY(this.addVolumeControll(xBack, y, h, w));
+			y = Utils.buildNextY(this.addAttenuationControll(xBack, y, h, w));
+			y = Utils.buildNextY(this.addWeightControll(xBack, y, h, w));
+		}
 	}
 
 	private WidgetBase addUploadButton(final int x, final int y, final int h, final int w) {

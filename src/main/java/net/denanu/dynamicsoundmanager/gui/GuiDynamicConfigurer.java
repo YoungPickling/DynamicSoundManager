@@ -50,8 +50,9 @@ public class GuiDynamicConfigurer extends GuiListBase<AudioOptionsEntry, AudioOp
 			for (final Identifier id: ClientSoundGroupManager.soundIds) {
 				x = Utils.buildNextX(x, this.getIdChooseButton(id, x, y, -1, h));
 			}
-
-			this.addImportButton(this.width - 2, this.height - 2, h);
+			if (Utils.hasModificationPermission()) {
+				this.addImportButton(this.width - 2, this.height - 2, h);
+			}
 		}
 	}
 

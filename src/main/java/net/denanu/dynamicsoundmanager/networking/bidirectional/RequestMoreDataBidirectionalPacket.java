@@ -1,5 +1,6 @@
 package net.denanu.dynamicsoundmanager.networking.bidirectional;
 
+import net.denanu.dynamicsoundmanager.gui.Utils;
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -15,9 +16,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class RequestMoreDataBidirectionalPacket {
 	public static void receive(final MinecraftServer server, final ServerPlayerEntity player, final ServerPlayNetworkHandler handler,
 			final PacketByteBuf buf, final PacketSender responseSender) {
-		final int inboundKey = buf.readInt();
-		final int outboundKey = buf.readInt();
-		TransferDateBidirectionalPacket.send(player, inboundKey, outboundKey);
+		if (Utils.hasModificationPermission(player)) {
+			final int inboundKey = buf.readInt();
+			final int outboundKey = buf.readInt();
+			TransferDateBidirectionalPacket.send(player, inboundKey, outboundKey);
+		}
 	}
 
 	public static void receive(final MinecraftClient client, final ClientPlayNetworkHandler handler,
