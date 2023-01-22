@@ -12,4 +12,5 @@ import net.minecraft.client.sound.WeightedSoundSet;
 @Mixin(WeightedSoundSet.class)
 public interface IWeightedSoundSetMixin {
 	@Accessor List<SoundContainer<Sound>> getSounds();
+	@Accessor void setSounds(List<SoundContainer<Sound>> sound);
 }

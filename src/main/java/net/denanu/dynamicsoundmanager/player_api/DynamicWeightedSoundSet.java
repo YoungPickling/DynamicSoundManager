@@ -2,6 +2,8 @@ package net.denanu.dynamicsoundmanager.player_api;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
 import net.denanu.dynamicsoundmanager.mixin.client.IWeightedSoundSetMixin;
 import net.fabricmc.api.EnvType;
@@ -40,16 +42,9 @@ public class DynamicWeightedSoundSet extends WeightedSoundSet {
 	}
 
 	public void addSound(final DynamicSoundConfigs config) {
-		if (this.doesNotHaveSound(config.getKey())) {
-			this.add(new DynamicSound(
-					config
-					));
-		}
-	}
-
-	private boolean doesNotHaveSound(final String key) {
-		// TODO Auto-generated method stub
-		return true;
+		this.add(new DynamicSound(
+				config
+				));
 	}
 
 	@Override
@@ -61,5 +56,9 @@ public class DynamicWeightedSoundSet extends WeightedSoundSet {
 		for (final DynamicSoundConfigs sound : sounds) {
 			this.addSound(sound);
 		}
+	}
+
+	public void setSound(final Sound sound) {
+		((IWeightedSoundSetMixin)this).setSounds(ImmutableList.of(sound));
 	}
 }

@@ -9,15 +9,34 @@ import com.puttysoftware.audio.ogg.OggFile;
 
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.widgets.WidgetContainer;
+import net.denanu.dynamicsoundmanager.DynamicSoundManager;
+import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.denanu.dynamicsoundmanager.gui.Icons;
+import net.denanu.dynamicsoundmanager.player_api.DynamicWeightedSoundSet;
+import net.denanu.dynamicsoundmanager.player_api.PreviewSound;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.sound.MusicSound;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class AudioPlayerWidget extends WidgetContainer {
+	private static final Identifier MUSIC_PREVIEW_ID = Identifier.of(DynamicSoundManager.MOD_ID, "music.preview");
+	private static final SoundEvent MUSIC_PREVIEW = AudioPlayerWidget.register(AudioPlayerWidget.MUSIC_PREVIEW_ID);
+	public static final MusicSound MUSIC = new MusicSound(AudioPlayerWidget.MUSIC_PREVIEW, 20, 600, true);
+
+	private static final PreviewSound PREVIEW_SOUND = new PreviewSound(Identifier.of(DynamicSoundManager.MOD_ID, "music.preview").toString());
+
+	private static SoundEvent register(final Identifier id) {
+		return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
+	}
+
+
 	private File audioFile = null;
 	private Optional<OggFile> player;
 	private ButtonGeneric playButton;
@@ -37,6 +56,9 @@ public class AudioPlayerWidget extends WidgetContainer {
 		this.state = PlayStates.STOPED;
 		this.player = Optional.empty();
 		this.initGui();
+
+		final DynamicWeightedSoundSet soundSet = (DynamicWeightedSoundSet)ClientSoundGroupManager.getSounds().get(AudioPlayerWidget.MUSIC_PREVIEW_ID);
+		soundSet.setSound(AudioPlayerWidget.PREVIEW_SOUND);
 	}
 
 	private void initGui() {
