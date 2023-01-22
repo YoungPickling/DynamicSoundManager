@@ -134,6 +134,10 @@ public class ServerSoundGroups extends PersistentState {
 		return out;
 	}
 
+	public static void setDirty() {
+		ServerSoundGroups.dirty = true;
+	}
+
 	@Override
 	public boolean isDirty() {
 		return ServerSoundGroups.dirty;

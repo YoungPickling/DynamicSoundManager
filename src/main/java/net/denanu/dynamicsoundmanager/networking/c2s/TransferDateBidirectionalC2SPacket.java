@@ -1,50 +1,39 @@
-package net.denanu.dynamicsoundmanager.networking.bidirectional;
+package net.denanu.dynamicsoundmanager.networking.c2s;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import net.denanu.dynamicsoundmanager.gui.Utils;
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
+import net.denanu.dynamicsoundmanager.networking.s2c.RequestMoreDataBidirectionalS2CPacket;
 import net.denanu.dynamicsoundmanager.networking.s2c.RequiredSoundsS2CPacket;
 import net.denanu.dynamicsoundmanager.networking.shared.FileSynchronizer;
+import net.denanu.dynamicsoundmanager.utils.Permission;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public class TransferDateBidirectionalPacket {
+public class TransferDateBidirectionalC2SPacket {
 	public static void receive(final MinecraftServer server, final ServerPlayerEntity player, final ServerPlayNetworkHandler handler,
 			final PacketByteBuf buf, final PacketSender responseSender) {
-		if (Utils.hasModificationPermission(player)) {
+		if (Permission.hasModificationPermission(player)) {
 			final int inboundKey 	= buf.readInt();
 			final int outboundKey 	= buf.readInt();
-			if (TransferDateBidirectionalPacket.run(buf, inboundKey)) {
-				RequestMoreDataBidirectionalPacket.send(player, inboundKey, outboundKey);
+			if (TransferDateBidirectionalC2SPacket.run(buf, inboundKey)) {
+				RequestMoreDataBidirectionalS2CPacket.send(player, inboundKey, outboundKey);
 			}
 			else {
-				TransferDateBidirectionalPacket.update(server);
+				TransferDateBidirectionalC2SPacket.update(server);
 			}
 		}
 	}
 
-	private static void update(final MinecraftServer server) {
+	public static void update(final MinecraftServer server) {
 		for (final ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
 			RequiredSoundsS2CPacket.send(player);
-		}
-	}
-
-	public static void receive(final MinecraftClient client, final ClientPlayNetworkHandler handler,
-			final PacketByteBuf buf, final PacketSender responseSender) {
-		final int inboundKey 	= buf.readInt();
-		final int outboundKey 	= buf.readInt();
-		if (TransferDateBidirectionalPacket.run(buf, inboundKey)) {
-			RequestMoreDataBidirectionalPacket.send(inboundKey, outboundKey);
 		}
 	}
 
@@ -97,10 +86,6 @@ public class TransferDateBidirectionalPacket {
 	}
 
 	public static void send(final int inboundKey, final int outboundKey) {
-		ClientPlayNetworking.send(NetworkHandler.Bidirectional.TRANSFER_DATA, TransferDateBidirectionalPacket.toBuf(inboundKey, outboundKey));
-	}
-
-	public static void send(final ServerPlayerEntity player, final int inboundKey, final int outboundKey) {
-		ServerPlayNetworking.send(player, NetworkHandler.Bidirectional.TRANSFER_DATA, TransferDateBidirectionalPacket.toBuf(inboundKey, outboundKey));
+		ClientPlayNetworking.send(NetworkHandler.Bidirectional.TRANSFER_DATA, TransferDateBidirectionalC2SPacket.toBuf(inboundKey, outboundKey));
 	}
 }

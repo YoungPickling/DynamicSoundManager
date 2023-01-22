@@ -1,5 +1,7 @@
 package net.denanu.dynamicsoundmanager.gui;
 
+import java.io.File;
+
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiListBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
@@ -43,6 +45,8 @@ public class GuiDynamicConfigurer extends GuiListBase<AudioOptionsEntry, AudioOp
 			x = Utils.buildNextX(x, this.addWidget(new WidgetLabel(
 					x, y, -1, h, 0xFF0000, StringUtils.translate(DynamicSoundManager.MOD_ID + ".gui.title.not-in-game")
 					)));
+
+			this.addClearChacheButton(this.width-2, this.height-2, -1, h);
 		}
 		else if (ClientSoundGroupManager.soundIds.isEmpty()) {
 			x = Utils.buildNextX(x, this.addWidget(new WidgetLabel(
@@ -59,10 +63,33 @@ public class GuiDynamicConfigurer extends GuiListBase<AudioOptionsEntry, AudioOp
 		}
 	}
 
+	private ButtonGeneric addClearChacheButton(final int x, final int y, final int width, final int height) {
+		final ButtonGeneric button = new ButtonGeneric(x, y - height, -1, height, StringUtils.translate(DynamicSoundManager.MOD_ID + ".button.clear-chache"));
+		button.setX(x - button.getWidth());
+
+		return this.addButton(
+				button,
+				(b, m) -> this.clearChache());
+	}
+
+
+	private void clearChache() {
+		GuiDynamicConfigurer.deleteDirectory(ClientSoundGroupManager.getChache().toFile());
+	}
+
+	private static boolean deleteDirectory(final File directoryToBeDeleted) {
+		final File[] allContents = directoryToBeDeleted.listFiles();
+		if (allContents != null) {
+			for (final File file : allContents) {
+				GuiDynamicConfigurer.deleteDirectory(file);
+			}
+		}
+		return directoryToBeDeleted.delete();
+	}
 
 	private ButtonGeneric getIdChooseButton(final Identifier id, final int x, final int y, final int width, final int height) {
 		final ButtonGeneric button = new ButtonGeneric(x, y, width, height, StringUtils.translate(id.toTranslationKey()));
-		button.setEnabled(GuiDynamicConfigurer.id != id);
+		button.setEnabled(!id.equals(GuiDynamicConfigurer.id));
 		return this.addButton(button, (b, mouse) -> {
 			this.setId(id);
 		});

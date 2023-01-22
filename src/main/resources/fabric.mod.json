@@ -10,7 +10,8 @@
   ],
   "contact": {
     "homepage": "https://github.com/JulianWww/DynamicSoundManager/blob/main/README.md",
-    "sources": "https://github.com/JulianWww/DynamicSoundManager"
+    "sources": "https://github.com/JulianWww/DynamicSoundManager",
+    "issues": "https://github.com/JulianWww/DynamicSoundManager/issues"
   },
 
   "license": "CC0-1.0",

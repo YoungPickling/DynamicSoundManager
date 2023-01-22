@@ -10,8 +10,9 @@ import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.gui.widgets.WidgetFileBrowserBase.DirectoryEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
+import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioPlayerWidget;
-import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidirectionalPacket;
+import net.denanu.dynamicsoundmanager.networking.c2s.InitTransferBidirectionalC2SPacket;
 import net.denanu.dynamicsoundmanager.utils.FileType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,6 +29,8 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 		super(10, 50);
 
 		this.title = StringUtils.translate(DynamicSoundManager.MOD_ID + ".gui.title.schematic_manager");
+
+		ClientSoundGroupManager.fileManager = this;
 	}
 
 	@Override
@@ -108,7 +111,7 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 		final File audio = this.audioPlayer.getAudioFile();
 		final Identifier group = GuiDynamicConfigurer.getId();
 
-		InitTransferBidirectionalPacket.send(audio, group);
+		InitTransferBidirectionalC2SPacket.send(audio, group);
 	}
 
 	private int createFileSystemButton(final int x, final int y, final File file, final String name) {
@@ -155,5 +158,15 @@ public class GuiFileManager extends GuiBrowserBase implements ISelectionListener
 	public void closeGui(final boolean showParent) {
 		super.closeGui(showParent);
 		this.audioPlayer.remove();
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		ClientSoundGroupManager.fileManager = null;
+	}
+
+	public void update() {
+		this.resize(this.mc, this.width, this.height);
 	}
 }

@@ -1,9 +1,49 @@
 # Fabric Example Mod
 
-## Setup
+## Install
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+```
+repositories {
+    maven {
+        name = 'Denanu Mods'
+        url = 'https://wandhoven.ddns.net/maven/'
+    }
+}
 
-## License
+dependencies {
+    modImplementation "net.denanu.DynamicSoundManager:DynamicSoundManager-<Minecraft_Version>:<StoppableSound_version>"
+}
+```
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## Usage
+
+In order to use this mod in your own mod, register a new Dynamic Sound Manager as following:
+```
+ServerSoundGroups.register(id);
+```
+where ```id``` is the SoundEvent Identifier.
+
+### Example
+```
+package net.denanu.dynamicsoundmanager.player_api;
+
+import net.denanu.dynamicsoundmanager.DynamicSoundManager;
+import net.denanu.dynamicsoundmanager.groups.ServerSoundGroups;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+
+public class DebugSounds {
+	public static Identifier TEST_ID = Identifier.of(DynamicSoundManager.MOD_ID, "test");
+
+	public static SoundEvent TEST = DebugSounds.register(DebugSounds.TEST_ID);
+
+	private static SoundEvent register(final Identifier id) {
+		final SoundEvent event = new SoundEvent(id);
+		ServerSoundGroups.register(id);
+		return Registry.register(Registry.SOUND_EVENT, id, event);
+	}
+
+	public static void setup() {}
+}
+```

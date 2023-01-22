@@ -30,15 +30,14 @@ public class RequiredSoundsS2CPacket {
 		});
 
 		final List<SoundGroup> sounds = buf.readList(SoundGroup::new);
-		ClientSoundGroupManager.init(sounds);
+		ClientSoundGroupManager.init(sounds, client);
 		ClientSoundGroupManager.populateSounds(sounds, ClientSoundGroupManager.addClientSoundData());
 
 
 		final List<String> nonMatching = ClientSoundGroupManager.metadata.getNonMatchingVersions(data);
 		RequestDownloadFilesC2SPacket.send(nonMatching);
 
-		//final WeightedSoundSet sound = ((SoundManagerMixin)client.getSoundManager()).getSounds().get(DebugSounds.TEST_ID);
-		//DynamicSoundManager.LOGGER.info(sound.toString());
+		ClientSoundGroupManager.update();
 	}
 
 	public static PacketByteBuf toBuf() {

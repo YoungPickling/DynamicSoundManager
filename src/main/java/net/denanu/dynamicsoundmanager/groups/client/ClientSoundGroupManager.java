@@ -12,7 +12,9 @@ import java.util.stream.Stream;
 import fi.dy.masa.malilib.util.FileUtils;
 import net.denanu.dynamicsoundmanager.groups.FileSynchronizationMetadataBuilder;
 import net.denanu.dynamicsoundmanager.groups.SoundGroup;
+import net.denanu.dynamicsoundmanager.gui.GuiFileManager;
 import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
+import net.denanu.dynamicsoundmanager.networking.c2s.InitTransferBidirectionalC2SPacket;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.denanu.dynamicsoundmanager.player_api.DynamicWeightedSoundSet;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
@@ -29,6 +31,8 @@ public class ClientSoundGroupManager {
 	public static HashSet<Identifier> soundIds = new HashSet<>();
 
 	public static FileSynchronizationMetadataBuilder metadata;
+
+	public static GuiFileManager fileManager = null;
 
 	public static String getServerName(final MinecraftClient client) {
 		final ServerInfo data = client.getCurrentServerEntry();
@@ -49,20 +53,49 @@ public class ClientSoundGroupManager {
 				.toString();
 	}
 
-	public static void init(final List<SoundGroup> configs) {
+	public static void init(final List<SoundGroup> configs, final MinecraftClient client) {
 		ClientSoundGroupManager.soundIds.clear();
 		final Stream<Identifier> out = configs.stream().map(SoundGroup::getId);
 		ClientSoundGroupManager.soundIds.addAll(out.toList());
+
+		ClientSoundGroupManager.removeUnnededFiles(configs, ClientSoundGroupManager.getChach(client));
+	}
+
+	private static void removeUnnededFiles(final List<SoundGroup> configs, final Path root) {
+		for (final SoundGroup group : configs) {
+			ClientSoundGroupManager.removeUnnededFiles(group, root);
+		}
+	}
+
+	private static void removeUnnededFiles(final SoundGroup group, final Path root) {
+		for (final File file : InitTransferBidirectionalC2SPacket.toPath(root, group.getId()).toFile().listFiles()) {
+			boolean found = false;
+			for (final DynamicSoundConfigs sound : group.sounds) {
+				final String key = sound.getKey();
+				final String name = file.getName();
+				if (key.equals(name)) {
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				file.delete();
+			}
+		}
+	}
+
+	public static Path getChache() {
+		return FileUtils.getConfigDirectory().toPath().resolve("dynamic_sounds");
 	}
 
 	public static Path getChach(final MinecraftClient client) {
-		Path cachePath =  FileUtils.getConfigDirectory().toPath().resolve("dynamic_sounds");
+		Path cachePath = ClientSoundGroupManager.getChache();
 
 		cachePath = cachePath.resolve(ClientSoundGroupManager.getServerName(client));
 		final File cacheFile = cachePath.toFile();
 
 		FileModificationUtils.mkdirIfAbsent(cacheFile);
-
 		return cachePath;
 	}
 
@@ -112,46 +145,10 @@ public class ClientSoundGroupManager {
 			dynamicSet.modifySound(config);
 		}
 	}
+
+	public static void update() {
+		if (ClientSoundGroupManager.fileManager != null) {
+			ClientSoundGroupManager.fileManager.update();
+		}
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
