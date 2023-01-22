@@ -8,6 +8,7 @@
 	"dynamicsoundmanager.button.return": "Return",
 	"dynamicsoundmanager.button.import": "Import",
 	"dynamicsoundmanager.button.import_file": "Import",
+	"dynamicsoundmanager.button.clear-chache": "Clear Chache",
 	
 	"dynamicsoundmanager.gui.slider.volume": "Volume",
 	"dynamicsoundmanager.gui.slider.pitch":  "Pitch",

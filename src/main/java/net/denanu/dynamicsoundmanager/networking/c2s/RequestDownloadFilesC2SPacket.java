@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.denanu.dynamicsoundmanager.networking.NetworkHandler;
-import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidirectionalPacket;
+import net.denanu.dynamicsoundmanager.networking.s2c.InitTransferBidirectionalS2CPacket;
 import net.denanu.dynamicsoundmanager.utils.FileKey;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -25,7 +25,7 @@ public class RequestDownloadFilesC2SPacket {
 		for (final String file : files) {
 			final FileKey key = new FileKey(file);
 
-			InitTransferBidirectionalPacket.send(player, key.getId(), key.getFileName());
+			InitTransferBidirectionalS2CPacket.send(player, key.getId(), key.getFileName());
 		}
 
 	}

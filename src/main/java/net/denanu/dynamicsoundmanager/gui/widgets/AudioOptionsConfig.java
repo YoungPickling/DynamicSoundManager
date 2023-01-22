@@ -16,9 +16,13 @@ import net.denanu.dynamicsoundmanager.gui.Utils;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioOptionsConfig.AudioOptionsEntry;
 import net.denanu.dynamicsoundmanager.gui.widgets.fields.GuiAudioFloatConfigField;
 import net.denanu.dynamicsoundmanager.gui.widgets.fields.GuiAudioIntConfigField;
+import net.denanu.dynamicsoundmanager.networking.c2s.DeleteSoundInGroupC2SPacket;
 import net.denanu.dynamicsoundmanager.networking.c2s.UpdatePlayConfigsC2SPacket;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public class AudioOptionsConfig extends WidgetListEntryBase<AudioOptionsEntry> {
 	List<TextFieldWrapper<? extends GuiTextFieldGeneric>> textFields;
 	ButtonGeneric upload;
@@ -67,6 +71,10 @@ public class AudioOptionsConfig extends WidgetListEntryBase<AudioOptionsEntry> {
 		this.update();
 	}
 
+	private void deleteFile() {
+		DeleteSoundInGroupC2SPacket.send(this.getEntry().config.getId(), this.getEntry().config.getKey());
+	}
+
 	private WidgetBase addNameWidget(final int x, final int y, final int h) {
 		return this.addWidget(
 				new WidgetLabel(x, y, -1, h, 0xFFFFFF, this.getEntry().getKey())
@@ -74,9 +82,9 @@ public class AudioOptionsConfig extends WidgetListEntryBase<AudioOptionsEntry> {
 	}
 
 	private ButtonGeneric addDeleteButton(final int x, final int y, final int h, final int w) {
-		return this.addWidget(
-				new ButtonGeneric(x, y, w, h, StringUtils.translate(DynamicSoundManager.MOD_ID + ".gui.button.delete"))
-
+		return this.addButton(
+				new ButtonGeneric(x, y, w, h, StringUtils.translate(DynamicSoundManager.MOD_ID + ".gui.button.delete")),
+				(b, m) -> this.deleteFile()
 				);
 	}
 

@@ -4,8 +4,11 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 
+@Environment(EnvType.CLIENT)
 public class GuiAudioIntConfigField extends GuiAudioConfigFieldBase<Integer> {
 	private static final Pattern PATTER_NUMBER = Pattern.compile("-?[0-9]*");
 

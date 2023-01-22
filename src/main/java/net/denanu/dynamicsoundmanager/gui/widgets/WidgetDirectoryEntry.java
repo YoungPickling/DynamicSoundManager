@@ -10,8 +10,11 @@ import fi.dy.masa.malilib.gui.widgets.WidgetFileBrowserBase.DirectoryEntryType;
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.FileUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 
+@Environment(EnvType.CLIENT)
 public class WidgetDirectoryEntry extends WidgetListEntryBase<DirectoryEntry>
 {
 	protected final IDirectoryNavigator navigator;
@@ -64,10 +67,10 @@ public class WidgetDirectoryEntry extends WidgetListEntryBase<DirectoryEntry>
 			RenderUtils.drawRect(this.x, this.y, this.width, this.height, 0x38FFFFFF);
 		}
 
-		IGuiIcon icon = switch (this.entry.getType()) {
-				case DIRECTORY -> this.iconProvider.getIconDirectory();
-				default -> this.iconProvider.getIconForFile(this.entry.getFullPath());
-				};
+		final IGuiIcon icon = switch (this.entry.getType()) {
+		case DIRECTORY -> this.iconProvider.getIconDirectory();
+		default -> this.iconProvider.getIconForFile(this.entry.getFullPath());
+		};
 
 		final int iconWidth = icon != null ? icon.getWidth() : 0;
 		final int xOffset = iconWidth + 2;

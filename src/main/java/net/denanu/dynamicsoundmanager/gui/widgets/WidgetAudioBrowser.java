@@ -13,7 +13,10 @@ import net.denanu.dynamicsoundmanager.gui.DataManager;
 import net.denanu.dynamicsoundmanager.gui.GuiBrowserBase;
 import net.denanu.dynamicsoundmanager.gui.Icons;
 import net.denanu.dynamicsoundmanager.utils.FileType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public class WidgetAudioBrowser extends WidgetFileBrowserBase {
 	protected final GuiBrowserBase parent;
 	protected final int infoWidth;

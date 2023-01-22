@@ -1,8 +1,8 @@
 package net.denanu.dynamicsoundmanager.gui;
 
 import fi.dy.masa.malilib.gui.widgets.WidgetBase;
+import net.denanu.dynamicsoundmanager.utils.Permission;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
 
 public class Utils {
 	public static int buildNextX(final int x, final WidgetBase widget) {
@@ -13,12 +13,8 @@ public class Utils {
 		return widget.getY() + widget.getHeight() + 2;
 	}
 
-	public static boolean hasModificationPermission(final PlayerEntity player) {
-		return player.hasPermissionLevel(2);
-	}
-
 	public static boolean hasModificationPermission() {
 		final MinecraftClient client = MinecraftClient.getInstance();
-		return Utils.hasModificationPermission(client.player);
+		return Permission.hasModificationPermission(client.player);
 	}
 }

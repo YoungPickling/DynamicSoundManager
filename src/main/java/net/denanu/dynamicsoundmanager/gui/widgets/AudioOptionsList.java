@@ -11,10 +11,13 @@ import net.denanu.dynamicsoundmanager.gui.Utils;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioOptionsConfig.AudioOptionsEntry;
 import net.denanu.dynamicsoundmanager.mixin.client.IWeightedSoundSetMixin;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSound;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundContainer;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class AudioOptionsList extends WidgetListBase<AudioOptionsEntry, AudioOptionsConfig>
 {
 	public AudioOptionsList(final int x, final int y, final int width, final int height)

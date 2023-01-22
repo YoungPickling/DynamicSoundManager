@@ -1,9 +1,11 @@
 package net.denanu.dynamicsoundmanager.groups;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.denanu.dynamicsoundmanager.networking.c2s.InitTransferBidirectionalC2SPacket;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -64,7 +66,18 @@ public class SoundGroup {
 	}
 
 	public void addConfig(final DynamicSoundConfigs config) {
-		this.sounds.add(config);
+		if (this.doesNotHaveSound(config)) {
+			this.sounds.add(config);
+		}
+	}
+
+	private boolean doesNotHaveSound(final DynamicSoundConfigs config) {
+		for (final DynamicSoundConfigs sound : this.sounds) {
+			if (config.getKey().equals(sound.getKey())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void clear() {
@@ -102,5 +115,27 @@ public class SoundGroup {
 
 			idx++;
 		}
+	}
+
+	public void delete(final Identifier id, final String key) {
+		boolean found = false;
+		int idx = 0;
+		for (final DynamicSoundConfigs sound : this.sounds) {
+			if (sound.getKey().equals(key)) {
+				found = true;
+				break;
+			}
+			idx++;
+		}
+
+		if (found) {
+			this.sounds.remove(idx);
+
+			ServerSoundGroups.setDirty();
+
+			final File file = InitTransferBidirectionalC2SPacket.toFile(ServerSoundGroups.path, id, key);
+			file.delete();
+		}
+
 	}
 }

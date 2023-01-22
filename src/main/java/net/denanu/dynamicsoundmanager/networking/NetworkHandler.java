@@ -1,12 +1,16 @@
 package net.denanu.dynamicsoundmanager.networking;
 
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
-import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidirectionalPacket;
-import net.denanu.dynamicsoundmanager.networking.bidirectional.RequestMoreDataBidirectionalPacket;
-import net.denanu.dynamicsoundmanager.networking.bidirectional.TransferDateBidirectionalPacket;
+import net.denanu.dynamicsoundmanager.networking.c2s.DeleteSoundInGroupC2SPacket;
+import net.denanu.dynamicsoundmanager.networking.c2s.InitTransferBidirectionalC2SPacket;
 import net.denanu.dynamicsoundmanager.networking.c2s.RequestDownloadFilesC2SPacket;
+import net.denanu.dynamicsoundmanager.networking.c2s.RequestMoreDataBidirectionalC2SPacket;
+import net.denanu.dynamicsoundmanager.networking.c2s.TransferDateBidirectionalC2SPacket;
 import net.denanu.dynamicsoundmanager.networking.c2s.UpdatePlayConfigsC2SPacket;
+import net.denanu.dynamicsoundmanager.networking.s2c.InitTransferBidirectionalS2CPacket;
+import net.denanu.dynamicsoundmanager.networking.s2c.RequestMoreDataBidirectionalS2CPacket;
 import net.denanu.dynamicsoundmanager.networking.s2c.RequiredSoundsS2CPacket;
+import net.denanu.dynamicsoundmanager.networking.s2c.TransferDateBidirectionalS2CPacket;
 import net.denanu.dynamicsoundmanager.networking.s2c.UpdateePlayConfigsS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -27,23 +31,25 @@ public class NetworkHandler {
 			ClientPlayNetworking.registerGlobalReceiver(S2C.REQUIRED_SOUNDS, 	RequiredSoundsS2CPacket::receive);
 			ClientPlayNetworking.registerGlobalReceiver(S2C.SEND_SOUND_CONFIG_UPDATE, UpdateePlayConfigsS2CPacket::receive);
 
-			ClientPlayNetworking.registerGlobalReceiver(Bidirectional.INIT_TRANSFER, 	InitTransferBidirectionalPacket::receive);
-			ClientPlayNetworking.registerGlobalReceiver(Bidirectional.REQUEST_DATA, 	RequestMoreDataBidirectionalPacket::receive);
-			ClientPlayNetworking.registerGlobalReceiver(Bidirectional.TRANSFER_DATA, 	TransferDateBidirectionalPacket::receive);
+			ClientPlayNetworking.registerGlobalReceiver(Bidirectional.INIT_TRANSFER, 	InitTransferBidirectionalS2CPacket::receive);
+			ClientPlayNetworking.registerGlobalReceiver(Bidirectional.REQUEST_DATA, 	RequestMoreDataBidirectionalS2CPacket::receive);
+			ClientPlayNetworking.registerGlobalReceiver(Bidirectional.TRANSFER_DATA, 	TransferDateBidirectionalS2CPacket::receive);
 		}
 	}
 
 	public class C2S {
 		public static final Identifier REQUEST_FILES 			= Identifier.of(DynamicSoundManager.MOD_ID, "request_files");
 		public static final Identifier SEND_SOUND_CONFIG_UPDATE = Identifier.of(DynamicSoundManager.MOD_ID, "update_config");
+		public static final Identifier DELETE_SOUND				= Identifier.of(DynamicSoundManager.MOD_ID, "delete_file");
 
 		private static void register() {
 			ServerPlayNetworking.registerGlobalReceiver(C2S.REQUEST_FILES, 				RequestDownloadFilesC2SPacket::receive);
 			ServerPlayNetworking.registerGlobalReceiver(C2S.SEND_SOUND_CONFIG_UPDATE, 	UpdatePlayConfigsC2SPacket::receive);
+			ServerPlayNetworking.registerGlobalReceiver(C2S.DELETE_SOUND, 				DeleteSoundInGroupC2SPacket::receive);
 
-			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.INIT_TRANSFER, 	InitTransferBidirectionalPacket::receive);
-			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.REQUEST_DATA, 	RequestMoreDataBidirectionalPacket::receive);
-			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.TRANSFER_DATA, 	TransferDateBidirectionalPacket::receive);
+			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.INIT_TRANSFER, 	InitTransferBidirectionalC2SPacket::receive);
+			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.REQUEST_DATA, 	RequestMoreDataBidirectionalC2SPacket::receive);
+			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.TRANSFER_DATA, 	TransferDateBidirectionalC2SPacket::receive);
 		}
 	}
 

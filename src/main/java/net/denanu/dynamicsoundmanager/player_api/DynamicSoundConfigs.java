@@ -12,10 +12,9 @@ import java.util.concurrent.CompletionException;
 import javax.sound.sampled.AudioFormat;
 
 import net.denanu.dynamicsoundmanager.groups.ServerSoundGroups;
-import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidirectionalPacket;
+import net.denanu.dynamicsoundmanager.networking.s2c.InitTransferBidirectionalS2CPacket;
 import net.denanu.dynamicsoundmanager.utils.FileKey;
 import net.minecraft.client.sound.OggAudioStream;
-import net.minecraft.client.sound.Sound;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -25,7 +24,7 @@ public class DynamicSoundConfigs {
 	private Identifier id;
 	private String key;
 	private float volume = 1f, pitch = 1f;
-	private Sound.RegistrationType registrationType = Sound.RegistrationType.FILE;
+	//private Sound.RegistrationType registrationType = Sound.RegistrationType.FILE;
 	private boolean stream = false, preload = false;
 	private int attenuation = 16;
 	private int weight = 1;
@@ -67,7 +66,7 @@ public class DynamicSoundConfigs {
 		this.key 				= config.key;
 		this.volume 			= config.volume;
 		this.pitch 				= config.pitch;
-		this.registrationType	= config.registrationType;
+		//this.registrationType	= config.registrationType;
 		this.stream 			= config.stream;
 		this.preload 			= config.preload;
 		this.attenuation 		= config.attenuation;
@@ -132,7 +131,7 @@ public class DynamicSoundConfigs {
 		return this.pitch;
 	}
 
-	public void setRegistrationType(final Sound.RegistrationType type) {
+	/*public void setRegistrationType(final Sound.RegistrationType type) {
 		if (this.registrationType != type) {
 			this.registrationType = type;
 			this.change();
@@ -141,7 +140,7 @@ public class DynamicSoundConfigs {
 
 	public Sound.RegistrationType getRegistrationType() {
 		return this.registrationType;
-	}
+	}*/
 
 	public void setStream(final boolean stream) {
 		if (this.stream != stream) {
@@ -200,8 +199,12 @@ public class DynamicSoundConfigs {
 	}
 
 	private void setup() {
-		final File file = InitTransferBidirectionalPacket.toFile(ServerSoundGroups.path, this.id, this.key);
-		this.computePlayTickTime(file);
+		if (ServerSoundGroups.path!= null) {
+			final File file = InitTransferBidirectionalS2CPacket.toFile(ServerSoundGroups.path, this.id, this.key);
+			if (file.exists()) {
+				this.computePlayTickTime(file);
+			}
+		}
 	}
 
 	private void computePlayTickTime(final File file) {
