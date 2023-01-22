@@ -1,22 +1,28 @@
 package net.denanu.dynamicsoundmanager.groups;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 
+import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
+import net.minecraft.data.DataProvider;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 import net.minecraft.util.Pair;
 
 public class FileSynchronizationMetadataBuilder {
@@ -30,25 +36,23 @@ public class FileSynchronizationMetadataBuilder {
 	}
 
 	public void reload() {
-		JSONObject jo = null;
+		JsonObject json = null;
 
 		try {
-			jo = this.read();
+			json = this.read();
 		}
 		catch (final Exception e) {
-			e.printStackTrace();
+			DynamicSoundManager.LOGGER.warn("Unable to read sound metadata from json file: " + this.file.getAbsolutePath());
 		}
 
-		if (jo == null) {
+		if (json == null) {
 			this.mkfile();
 		}
 		else {
 			this.versions.clear();
-			for (final Object key : jo.keySet()) {
-				final String key_str = (String)key;
-				final long version = (long)jo.get(key);
-
-				this.versions.put(key_str, version);
+			for (final String key : json.keySet()) {
+				final long version = JsonHelper.getLong(json, key);
+				this.versions.put(key, version);
 			}
 		}
 	}
@@ -58,42 +62,42 @@ public class FileSynchronizationMetadataBuilder {
 		this.update();
 	}
 
-	@SuppressWarnings("unchecked")
 	public void update() {
-		final JSONObject jo = new JSONObject();
-		jo.putAll(this.versions);
-		this.write(jo);
-	}
-
-	private void write(final JSONObject jo) {
-		try (PrintWriter out = new PrintWriter(new FileWriter(this.file))) {
-			out.write(jo.toJSONString());
-			out.close();
+		final JsonObject json = new JsonObject();
+		for (final Entry<String, Long> key : this.versions.entrySet()) {
+			json.addProperty(key.getKey(), key.getValue());
 		}
-		catch (final Exception e) {
-			e.printStackTrace();
+		try {
+			this.write(json);
+		} catch (final IOException e) {
+			DynamicSoundManager.LOGGER.warn("Unable to write sound metadata to json file");
 		}
 	}
 
-	public JSONObject read() {
-		final JSONParser jsonParser = new JSONParser();
+	private void write(final JsonObject json) throws IOException {
+		final FileOutputStream stream = new FileOutputStream(this.file);
+		final OutputStreamWriter writer2 = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
+		final JsonWriter jsonWriter = new JsonWriter(writer2);
+		jsonWriter.setSerializeNulls(false);
+		jsonWriter.setIndent("  ");
+		JsonHelper.writeSorted(jsonWriter, json, DataProvider.JSON_KEY_SORTING_COMPARATOR);
+		jsonWriter.close();
+		writer2.close();
+		stream.close();
+	}
 
-		try (FileReader reader = new FileReader(this.file))
-		{
-			//Read JSON file
-			final Object obj = jsonParser.parse(reader);
-
-			return (JSONObject) obj;
-
-		} catch (IOException | org.json.simple.parser.ParseException e) {
-			//e.printStackTrace();
-		}
-
-		return null;
+	public JsonObject read() throws FileNotFoundException {
+		return JsonHelper.deserialize(new FileReader(this.file));
 	}
 
 	public void changeVersion(final Identifier id, final String file) {
 		this.changeVersion(id, file, Instant.now().toEpochMilli());
+	}
+
+	public void delete(final Identifier id, final String file) {
+		final String key = FileSynchronizationMetadataBuilder.buildKey(id, file);
+		this.versions.remove(key);
+		this.update();
 	}
 
 	public void changeVersion(final Identifier id, final String file, final long version) {
