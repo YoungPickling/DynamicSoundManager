@@ -13,7 +13,6 @@ group = project.maven_group
 repositories {
 	maven { url 'https://masa.dy.fi/maven/' }
 	maven { url 'https://maven.terraformersmc.com/releases/' }
-	maven { url 'https://wandhoven.ddns.net/maven/' }
 }
 
 dependencies {
@@ -27,8 +26,6 @@ dependencies {
 
 	modImplementation "fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version}:${project.malilib_version}"
 	modCompileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
-	
-	implementation "com.puttysoftware.audio.ogg:audio-ogg:${project.audio_ogg_version}"
 }
 
 group = project.group + "." + project.archives_base_name
