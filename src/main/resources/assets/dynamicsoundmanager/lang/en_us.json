@@ -15,7 +15,5 @@
 	"dynamicsoundmanager.gui.slider.weight": "Play Weight",
 	
 	"dynamicsoundmanager.gui.button.upload": "Upload",
-	"dynamicsoundmanager.gui.button.delete": "Delete",
-		
-	"dynamicsoundmanager.test": "Test"
+	"dynamicsoundmanager.gui.button.delete": "Delete"
 }
