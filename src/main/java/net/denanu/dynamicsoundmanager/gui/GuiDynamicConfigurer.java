@@ -10,9 +10,12 @@ import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioOptionsConfig;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioOptionsConfig.AudioOptionsEntry;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioOptionsList;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class GuiDynamicConfigurer extends GuiListBase<AudioOptionsEntry, AudioOptionsConfig, AudioOptionsList> {
 	private static Identifier id;
 

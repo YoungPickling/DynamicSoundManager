@@ -8,12 +8,9 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
-import fi.dy.masa.malilib.gui.interfaces.IDirectoryCache;
-import net.denanu.dynamicsoundmanager.groups.client.ClientSoundGroupManager;
 import net.denanu.dynamicsoundmanager.networking.s2c.UpdateePlayConfigsS2CPacket;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.denanu.dynamicsoundmanager.utils.FileModificationUtils;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -27,7 +24,7 @@ import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.PersistentState;
 
-public class ServerSoundGroups extends PersistentState implements IDirectoryCache {
+public class ServerSoundGroups extends PersistentState {
 	public static HashMap<Identifier, SoundGroup> sounds = new HashMap<>();
 
 	public static Path path;
@@ -84,16 +81,6 @@ public class ServerSoundGroups extends PersistentState implements IDirectoryCach
 
 	public static HashMap<Identifier, SoundGroup> getSounds() {
 		return ServerSoundGroups.sounds;
-	}
-
-	@Override
-	@Nullable
-	public File getCurrentDirectoryForContext(final String context) {
-		return ClientSoundGroupManager.getChach(MinecraftClient.getInstance()).toFile();
-	}
-
-	@Override
-	public void setCurrentDirectoryForContext(final String context, final File dir) {
 	}
 
 	public static DynamicSoundConfigs playSound(final ServerWorld world, @Nullable final PlayerEntity player, final Vec3d pos, final SoundEvent sound, final SoundCategory category, final float volume, final float pitch) {

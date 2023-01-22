@@ -8,7 +8,10 @@ import javax.annotation.Nullable;
 import javax.swing.filechooser.FileSystemView;
 
 import fi.dy.masa.malilib.gui.interfaces.IDirectoryCache;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public class DataManager implements IDirectoryCache {
 	private static final DataManager INSTANCE = new DataManager();
 

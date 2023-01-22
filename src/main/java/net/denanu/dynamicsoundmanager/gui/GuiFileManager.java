@@ -13,9 +13,12 @@ import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.gui.widgets.AudioPlayerWidget;
 import net.denanu.dynamicsoundmanager.networking.bidirectional.InitTransferBidirectionalPacket;
 import net.denanu.dynamicsoundmanager.utils.FileType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class GuiFileManager extends GuiBrowserBase implements ISelectionListener<DirectoryEntry>
 {
 	private AudioPlayerWidget audioPlayer;

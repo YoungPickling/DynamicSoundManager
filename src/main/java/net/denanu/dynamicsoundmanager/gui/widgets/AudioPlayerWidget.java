@@ -10,10 +10,13 @@ import com.puttysoftware.audio.ogg.OggFile;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.widgets.WidgetContainer;
 import net.denanu.dynamicsoundmanager.gui.Icons;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.client.util.math.MatrixStack;
 
+@Environment(EnvType.CLIENT)
 public class AudioPlayerWidget extends WidgetContainer {
 	private File audioFile = null;
 	private Optional<OggFile> player;

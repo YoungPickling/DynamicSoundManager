@@ -8,9 +8,12 @@ import fi.dy.masa.malilib.gui.widgets.WidgetBase;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.KeyCodes;
 import net.denanu.dynamicsoundmanager.gui.widgets.fields.GuiAudioConfigFieldBase;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
+@Environment(EnvType.CLIENT)
 public class NumberInputFieldWidget<E> extends WidgetBase {
 	protected final GuiAudioConfigFieldBase<E> txtBox;
 	protected boolean txtActive;

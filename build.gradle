@@ -29,7 +29,6 @@ dependencies {
 	modCompileOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
 	
 	implementation "com.puttysoftware.audio.ogg:audio-ogg:${project.audio_ogg_version}"
-	implementation "com.googlecode.json-simple:json-simple:1.1.1"
 }
 
 group = project.group + "." + project.archives_base_name

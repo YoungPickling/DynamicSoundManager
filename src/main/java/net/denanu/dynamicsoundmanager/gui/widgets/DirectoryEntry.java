@@ -6,7 +6,10 @@ import java.util.Locale;
 import javax.annotation.Nullable;
 
 import fi.dy.masa.malilib.gui.widgets.WidgetFileBrowserBase.DirectoryEntryType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public class DirectoryEntry implements Comparable<DirectoryEntry>
 {
 	private final DirectoryEntryType type;

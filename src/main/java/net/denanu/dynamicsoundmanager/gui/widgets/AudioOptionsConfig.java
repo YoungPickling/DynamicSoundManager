@@ -18,7 +18,10 @@ import net.denanu.dynamicsoundmanager.gui.widgets.fields.GuiAudioFloatConfigFiel
 import net.denanu.dynamicsoundmanager.gui.widgets.fields.GuiAudioIntConfigField;
 import net.denanu.dynamicsoundmanager.networking.c2s.UpdatePlayConfigsC2SPacket;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public class AudioOptionsConfig extends WidgetListEntryBase<AudioOptionsEntry> {
 	List<TextFieldWrapper<? extends GuiTextFieldGeneric>> textFields;
 	ButtonGeneric upload;

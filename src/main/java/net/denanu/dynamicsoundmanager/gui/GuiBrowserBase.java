@@ -6,7 +6,10 @@ import fi.dy.masa.malilib.gui.GuiListBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetDirectoryEntry;
 import fi.dy.masa.malilib.gui.widgets.WidgetFileBrowserBase.DirectoryEntry;
 import net.denanu.dynamicsoundmanager.gui.widgets.WidgetAudioBrowser;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public abstract class GuiBrowserBase extends GuiListBase<DirectoryEntry, WidgetDirectoryEntry, WidgetAudioBrowser>
 {
 	private WidgetAudioBrowser browser;
