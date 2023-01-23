@@ -68,19 +68,22 @@ public class ClientSoundGroupManager {
 	}
 
 	private static void removeUnnededFiles(final SoundGroup group, final Path root) {
-		for (final File file : InitTransferBidirectionalC2SPacket.toPath(root, group.getId()).toFile().listFiles()) {
-			boolean found = false;
-			for (final DynamicSoundConfigs sound : group.sounds) {
-				final String key = sound.getKey();
-				final String name = file.getName();
-				if (key.equals(name)) {
-					found = true;
-					break;
+		final File[] files = InitTransferBidirectionalC2SPacket.toPath(root, group.getId()).toFile().listFiles();
+		if (files != null) {
+			for (final File file : InitTransferBidirectionalC2SPacket.toPath(root, group.getId()).toFile().listFiles()) {
+				boolean found = false;
+				for (final DynamicSoundConfigs sound : group.sounds) {
+					final String key = sound.getKey();
+					final String name = file.getName();
+					if (key.equals(name)) {
+						found = true;
+						break;
+					}
 				}
-			}
 
-			if (!found) {
-				file.delete();
+				if (!found) {
+					file.delete();
+				}
 			}
 		}
 	}

@@ -66,7 +66,8 @@ public class DynamicSound extends Sound {
 					final ByteBuffer byteBuffer = oggAudioStream.getBuffer();
 
 					final AudioFormat format = oggAudioStream.getFormat();
-					final float frames = format.getFrameSize() * format.getFrameRate();
+					format.getFrameSize();
+					format.getFrameRate();
 					byteBuffer.limit();
 
 					staticSound = new StaticSound(byteBuffer, oggAudioStream.getFormat());
