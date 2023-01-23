@@ -1,0 +1,20 @@
+{
+	"dynamicsoundmanager.gui.title.configs": "Audio Configurations Editor",
+	"dynamicsoundmanager.gui.title.dynamic-configurer": "Audio Configurations",
+	"dynamicsoundmanager.gui.title.not-in-game": "Du bist nicht im Spiel, trit einem Speil bei um Dynamische Töne zu sehen",
+	"dynamicsoundmanager.gui.title.no-sounds": "Keine Töne verfügbar.",
+	
+	"dynamicsoundmanager.button.home": "Home",
+	"dynamicsoundmanager.button.return": "Zurück",
+	"dynamicsoundmanager.button.import": "Importieren",
+	"dynamicsoundmanager.button.import_file": "Datei Importieren",
+	"dynamicsoundmanager.button.clear-chache": "Chache Löschen",
+	
+	"dynamicsoundmanager.gui.slider.volume": "Volumen",
+	"dynamicsoundmanager.gui.slider.pitch":  "Tonhöhe",
+	"dynamicsoundmanager.gui.slider.attenuation": "Dämpfung",
+	"dynamicsoundmanager.gui.slider.weight": "Abspiel Gewicht",
+	
+	"dynamicsoundmanager.gui.button.upload": "Hochladen",
+	"dynamicsoundmanager.gui.button.delete": "Löschen"
+}
