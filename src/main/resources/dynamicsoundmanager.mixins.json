@@ -11,9 +11,12 @@
   ],
   "client": [
   	"client.IMusicTrackerAccessor",
-  	"client.SoundLoaderMixin",
+  	"client.IWeightedSoundSetMixin",
+  	"client.IWorldEntryAccessor",
+  	"client.MinecraftClientMixin",
   	"client.MusicTrackerMixin",
-  	"client.IWeightedSoundSetMixin"
+  	"client.SoundLoaderMixin",
+  	"client.MusicTrackerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

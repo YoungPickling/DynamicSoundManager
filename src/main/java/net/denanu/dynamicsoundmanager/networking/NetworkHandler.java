@@ -3,6 +3,7 @@ package net.denanu.dynamicsoundmanager.networking;
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
 import net.denanu.dynamicsoundmanager.networking.c2s.DeleteSoundInGroupC2SPacket;
 import net.denanu.dynamicsoundmanager.networking.c2s.InitTransferBidirectionalC2SPacket;
+import net.denanu.dynamicsoundmanager.networking.c2s.ReloadResourcesC2SPacket;
 import net.denanu.dynamicsoundmanager.networking.c2s.RequestDownloadFilesC2SPacket;
 import net.denanu.dynamicsoundmanager.networking.c2s.RequestMoreDataBidirectionalC2SPacket;
 import net.denanu.dynamicsoundmanager.networking.c2s.TransferDateBidirectionalC2SPacket;
@@ -41,11 +42,13 @@ public class NetworkHandler {
 		public static final Identifier REQUEST_FILES 			= Identifier.of(DynamicSoundManager.MOD_ID, "request_files");
 		public static final Identifier SEND_SOUND_CONFIG_UPDATE = Identifier.of(DynamicSoundManager.MOD_ID, "update_config");
 		public static final Identifier DELETE_SOUND				= Identifier.of(DynamicSoundManager.MOD_ID, "delete_file");
+		public static final Identifier RELOAD_RESOURCES			= Identifier.of(DynamicSoundManager.MOD_ID, "reload_resources");
 
 		private static void register() {
 			ServerPlayNetworking.registerGlobalReceiver(C2S.REQUEST_FILES, 				RequestDownloadFilesC2SPacket::receive);
 			ServerPlayNetworking.registerGlobalReceiver(C2S.SEND_SOUND_CONFIG_UPDATE, 	UpdatePlayConfigsC2SPacket::receive);
 			ServerPlayNetworking.registerGlobalReceiver(C2S.DELETE_SOUND, 				DeleteSoundInGroupC2SPacket::receive);
+			ServerPlayNetworking.registerGlobalReceiver(C2S.RELOAD_RESOURCES, 			ReloadResourcesC2SPacket::receive);
 
 			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.INIT_TRANSFER, 	InitTransferBidirectionalC2SPacket::receive);
 			ServerPlayNetworking.registerGlobalReceiver(Bidirectional.REQUEST_DATA, 	RequestMoreDataBidirectionalC2SPacket::receive);
