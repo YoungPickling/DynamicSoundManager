@@ -4,7 +4,7 @@
   "version": "${mod_version}",
 
   "name": "Dynamic Sound Manager",
-  "description": "A system for dynamically handeling audio files. This is allowes for you to get your entities to play whatever sounds you want. It does require a mod registering a dynamic sound manager",
+  "description": "A system for dynamically handeling audio files. This is allowes for you to get your entities to play whatever sounds you want. It does require a mod registering a dynamic sound manager.\nIf your language is not supported please consider translating a language file for your own language (see languages link).",
   "authors": [
     "denanu"
   ],
@@ -41,5 +41,12 @@
   },
   "suggests": {
     "another-mod": "modmenu"
+  },
+  "custom": {
+  	"modmenu": {
+  		"links": {
+  			"languages": "https://github.com/JulianWww/DynamicSoundManager/issues/6"
+  		}
+  	}
   }
 }
