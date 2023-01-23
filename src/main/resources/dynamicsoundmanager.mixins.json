@@ -16,7 +16,7 @@
   	"client.MinecraftClientMixin",
   	"client.MusicTrackerMixin",
   	"client.SoundLoaderMixin",
-  	"client.MusicTrackerMixin"
+  	"client.WorldEntryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

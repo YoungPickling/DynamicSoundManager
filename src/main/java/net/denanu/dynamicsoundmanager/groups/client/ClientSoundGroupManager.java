@@ -25,6 +25,7 @@ import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.sound.WeightedSoundSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
+import net.minecraft.world.level.storage.LevelSummary;
 
 @Environment(value=EnvType.CLIENT)
 public class ClientSoundGroupManager {
@@ -51,6 +52,10 @@ public class ClientSoundGroupManager {
 				.append("/")
 				.append(data.address)
 				.toString();
+	}
+
+	public static Path getDeleteFile(final LevelSummary lvl) {
+		return ClientSoundGroupManager.getChache().resolve("localhost").resolve(lvl.getName());
 	}
 
 	public static void init(final List<SoundGroup> configs, final MinecraftClient client) {
