@@ -11,9 +11,11 @@
   ],
   "client": [
   	"client.IMusicTrackerAccessor",
-  	"client.SoundLoaderMixin",
+  	"client.IWeightedSoundSetMixin",
+  	"client.IWorldEntryAccessor",
   	"client.MusicTrackerMixin",
-  	"client.IWeightedSoundSetMixin"
+  	"client.SoundLoaderMixin",
+  	"client.WorldEntryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

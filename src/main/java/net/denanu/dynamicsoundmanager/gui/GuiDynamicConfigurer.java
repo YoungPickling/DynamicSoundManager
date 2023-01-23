@@ -1,7 +1,5 @@
 package net.denanu.dynamicsoundmanager.gui;
 
-import java.io.File;
-
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiListBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
@@ -74,17 +72,7 @@ public class GuiDynamicConfigurer extends GuiListBase<AudioOptionsEntry, AudioOp
 
 
 	private void clearChache() {
-		GuiDynamicConfigurer.deleteDirectory(ClientSoundGroupManager.getChache().toFile());
-	}
-
-	private static boolean deleteDirectory(final File directoryToBeDeleted) {
-		final File[] allContents = directoryToBeDeleted.listFiles();
-		if (allContents != null) {
-			for (final File file : allContents) {
-				GuiDynamicConfigurer.deleteDirectory(file);
-			}
-		}
-		return directoryToBeDeleted.delete();
+		Utils.deleteDirectory(ClientSoundGroupManager.getChache().toFile());
 	}
 
 	private ButtonGeneric getIdChooseButton(final Identifier id, final int x, final int y, final int width, final int height) {
