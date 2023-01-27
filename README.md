@@ -2,7 +2,7 @@
 
 ## Install
 
-```
+``` gradle
 repositories {
     maven {
         name = 'Denanu Mods'
@@ -18,13 +18,13 @@ dependencies {
 ## Usage
 
 In order to use this mod in your own mod, register a new Dynamic Sound Manager as following:
-```
+``` java
 ServerSoundGroups.register(id);
 ```
 where ```id``` is the SoundEvent Identifier.
 
 ### Example
-```
+``` java
 package net.denanu.dynamicsoundmanager.player_api;
 
 import net.denanu.dynamicsoundmanager.DynamicSoundManager;
