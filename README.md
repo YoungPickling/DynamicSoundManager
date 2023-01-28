@@ -1,5 +1,7 @@
 # Fabric Example Mod
 
+Dynamic sound manager is a minecraft mod, that allows operators to dynamically change preselected minecraft sounds.
+
 ## Install
 
 ``` gradle
