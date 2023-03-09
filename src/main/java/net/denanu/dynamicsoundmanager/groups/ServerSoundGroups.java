@@ -99,7 +99,7 @@ public class ServerSoundGroups extends PersistentState {
 		return ServerSoundGroups.getConfig(seed, sound.getId());
 	}
 
-	private static DynamicSoundConfigs getConfig(final long seed, final Identifier id) {
+	public static DynamicSoundConfigs getConfig(final long seed, final Identifier id) {
 		return ServerSoundGroups.sounds.get(id).getConfig(seed);
 	}
 

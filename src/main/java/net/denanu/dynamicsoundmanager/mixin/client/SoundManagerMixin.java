@@ -1,4 +1,4 @@
-package net.denanu.dynamicsoundmanager.mixin;
+package net.denanu.dynamicsoundmanager.mixin.client;
 
 import java.util.Map;
 

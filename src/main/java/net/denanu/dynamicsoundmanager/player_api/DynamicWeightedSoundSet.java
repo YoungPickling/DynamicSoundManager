@@ -2,8 +2,8 @@ package net.denanu.dynamicsoundmanager.player_api;
 
 import java.util.List;
 
-import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
 import net.denanu.dynamicsoundmanager.mixin.client.IWeightedSoundSetMixin;
+import net.denanu.dynamicsoundmanager.mixin.client.SoundManagerMixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

@@ -6,8 +6,7 @@
   "mixins": [
 	"CheckedRandomMixin",
   	"IdentifierNamespaceMixin",
-  	"PlayerManagerMixin",
-  	"SoundManagerMixin"
+  	"PlayerManagerMixin"
   ],
   "client": [
   	"client.IMusicTrackerAccessor",
@@ -16,6 +15,7 @@
   	"client.MinecraftClientMixin",
   	"client.MusicTrackerMixin",
   	"client.SoundLoaderMixin",
+  	"client.SoundManagerMixin",
   	"client.WorldEntryMixin"
   ],
   "injectors": {

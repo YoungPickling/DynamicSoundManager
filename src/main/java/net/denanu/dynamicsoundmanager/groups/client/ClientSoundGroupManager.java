@@ -13,7 +13,7 @@ import fi.dy.masa.malilib.util.FileUtils;
 import net.denanu.dynamicsoundmanager.groups.FileSynchronizationMetadataBuilder;
 import net.denanu.dynamicsoundmanager.groups.SoundGroup;
 import net.denanu.dynamicsoundmanager.gui.GuiFileManager;
-import net.denanu.dynamicsoundmanager.mixin.SoundManagerMixin;
+import net.denanu.dynamicsoundmanager.mixin.client.SoundManagerMixin;
 import net.denanu.dynamicsoundmanager.networking.c2s.InitTransferBidirectionalC2SPacket;
 import net.denanu.dynamicsoundmanager.player_api.DynamicSoundConfigs;
 import net.denanu.dynamicsoundmanager.player_api.DynamicWeightedSoundSet;
