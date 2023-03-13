@@ -10,12 +10,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.denanu.dynamicsoundmanager.networking.c2s.ReloadResourcesC2SPacket;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.client.sound.WeightedSoundSet;
+import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 
 @Mixin(targets = { "net.minecraft.client.sound.SoundManager$SoundList" })
 public class MinecraftClientMixin {
 	@Inject(method="reload", at=@At("RETURN"))
-	private void reload(final Map<Identifier, WeightedSoundSet> sounds, final SoundSystem soundSystem, final CallbackInfo cir) {
+	private void reload(final Map<Identifier, WeightedSoundSet> sounds, final Map<Identifier, Resource> soundResources, final SoundSystem soundSystem, final CallbackInfo cir) {
 		ReloadResourcesC2SPacket.send();
 	}
 }
