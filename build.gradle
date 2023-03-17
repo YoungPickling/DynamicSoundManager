@@ -32,8 +32,8 @@ group = project.group + "." + project.archives_base_name
 archivesBaseName = project.archives_base_name + '-' + project.minecraft_version
 version = project.mod_version
 
-if (version.endsWith('-dev')) {
-	version += "-" + Long.toHexString(new Date().getTime())
+if (project.dev == "true") {
+	project.version += "." + Long.toString(new Date().getTime())
 }
 
 processResources {
