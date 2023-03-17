@@ -15,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -94,10 +93,10 @@ public class ServerSoundGroups extends PersistentState {
 		return ServerSoundGroups.getConfig(seed, sound.getId());
 	}
 
-	public static DynamicSoundConfigs playSoundFromEntity(final ServerWorld world, @Nullable final PlayerEntity player, final Entity entity, final RegistryEntry<SoundEvent> sound, final SoundCategory category, final float volume, final float pitch) {
+	public static DynamicSoundConfigs playSoundFromEntity(final ServerWorld world, @Nullable final PlayerEntity player, final Entity entity, final SoundEvent sound, final SoundCategory category, final float volume, final float pitch) {
 		final long seed = world.getRandom().nextLong();
 		world.playSoundFromEntity(player, entity, sound, category, volume, pitch, seed);
-		return ServerSoundGroups.getConfig(seed, sound.value().getId());
+		return ServerSoundGroups.getConfig(seed, sound.getId());
 	}
 
 	public static DynamicSoundConfigs getConfig(final long seed, final Identifier id) {
