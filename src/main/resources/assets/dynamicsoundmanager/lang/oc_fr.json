@@ -1,0 +1,20 @@
+{
+	"dynamicsoundmanager.gui.title.configs": "Gestionari àudio personalizat",
+	"dynamicsoundmanager.gui.title.dynamic-configurer": "Configuracions àudio",
+	"dynamicsoundmanager.gui.title.not-in-game": "Sètz pas dins un jòc, rejonhètz un jòc per configurar vòstres sons dinamics",
+	"dynamicsoundmanager.gui.title.no-sounds": "Cap de son pas disponible.",
+	
+	"dynamicsoundmanager.button.home": "Acuèlh",
+	"dynamicsoundmanager.button.return": "Tornar",
+	"dynamicsoundmanager.button.import": "Importar",
+	"dynamicsoundmanager.button.import_file": "Importar",
+	"dynamicsoundmanager.button.clear-chache": "Voidar lo cache",
+	
+	"dynamicsoundmanager.gui.slider.volume": "Volum",
+	"dynamicsoundmanager.gui.slider.pitch":  "Terren",
+	"dynamicsoundmanager.gui.slider.attenuation": "Atenuacion",
+	"dynamicsoundmanager.gui.slider.weight": "Pes de jòc",
+	
+	"dynamicsoundmanager.gui.button.upload": "Telecargar",
+	"dynamicsoundmanager.gui.button.delete": "Suprimir"
+}
