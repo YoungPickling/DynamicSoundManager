@@ -7,10 +7,10 @@
     "dynamicsoundmanager.button.home": "Namo",
     "dynamicsoundmanager.button.return": "Grįžti",
     "dynamicsoundmanager.button.import": "Importuoti",
-    "dynamicsoundmanager.button.import_file": "Import",
+    "dynamicsoundmanager.button.import_file": "Importuoti",
     "dynamicsoundmanager.button.clear-chache": "Išvalyti cache",
 
-    "dynamicsoundmanager.gui.slider.volume": "Gasumas",
+    "dynamicsoundmanager.gui.slider.volume": "Garsumas",
     "dynamicsoundmanager.gui.slider.pitch":  "Garso aukštis",
     "dynamicsoundmanager.gui.slider.attenuation": "Atenuacija",
     "dynamicsoundmanager.gui.slider.weight": "Grojimo sunkumas",
