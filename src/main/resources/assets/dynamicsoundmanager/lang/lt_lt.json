@@ -1,0 +1,20 @@
+{
+    "dynamicsoundmanager.gui.title.configs": "Pasirinktine garso tvarkyklė",
+    "dynamicsoundmanager.gui.title.dynamic-configurer": "Garso nustatymai",
+    "dynamicsoundmanager.gui.title.not-in-game": "Nesate Žaidime, Prisijunkite prie žaidimo, norėdami redaguoti Garso Nustatymus ",
+    "dynamicsoundmanager.gui.title.no-sounds": "Nėra garsų.",
+
+    "dynamicsoundmanager.button.home": "Namo",
+    "dynamicsoundmanager.button.return": "Grįžti",
+    "dynamicsoundmanager.button.import": "Importuoti",
+    "dynamicsoundmanager.button.import_file": "Import",
+    "dynamicsoundmanager.button.clear-chache": "Išvalyti cache",
+
+    "dynamicsoundmanager.gui.slider.volume": "Gasumas",
+    "dynamicsoundmanager.gui.slider.pitch":  "Garso aukštis",
+    "dynamicsoundmanager.gui.slider.attenuation": "Atenuacija",
+    "dynamicsoundmanager.gui.slider.weight": "Grojimo sunkumas",
+
+    "dynamicsoundmanager.gui.button.upload": "Įkelti",
+    "dynamicsoundmanager.gui.button.delete": "Įštrinti"
+}

@@ -1,0 +1,20 @@
+{
+	"dynamicsoundmanager.gui.title.configs": "Пользовательский Аудиоредактор",
+	"dynamicsoundmanager.gui.title.dynamic-configurer": "Настройки Звука",
+	"dynamicsoundmanager.gui.title.not-in-game": "Вы не в игре, Присоединитесь для Настройки звука",
+	"dynamicsoundmanager.gui.title.no-sounds": "Звуки отсутствуют.",
+	
+	"dynamicsoundmanager.button.home": "Домой",
+	"dynamicsoundmanager.button.return": "Вернуться",
+	"dynamicsoundmanager.button.import": "Импортировать",
+	"dynamicsoundmanager.button.import_file": "Импортировать",
+	"dynamicsoundmanager.button.clear-chache": "Очистить Кэш",
+	
+	"dynamicsoundmanager.gui.slider.volume": "Громкость",
+	"dynamicsoundmanager.gui.slider.pitch":  "Тембр",
+	"dynamicsoundmanager.gui.slider.attenuation": "Затухание",
+	"dynamicsoundmanager.gui.slider.weight": "Тяжесть Проигрывания",
+	
+	"dynamicsoundmanager.gui.button.upload": "Загрузить",
+	"dynamicsoundmanager.gui.button.delete": "Стереть"
+}
